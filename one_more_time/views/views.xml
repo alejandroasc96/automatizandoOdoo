@@ -1,0 +1,75 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="one_more_time.list">
+      <field name="name">oneMoreTime list</field>
+      <field name="model">one_more_time.one_more_time</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="one_more_time.action_window">
+      <field name="name">oneMoreTime window</field>
+      <field name="res_model">one_more_time.one_more_time</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="one_more_time.action_server">
+      <field name="name">oneMoreTime server</field>
+      <field name="model_id" ref="model_one_more_time_one_more_time"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="oneMoreTime" id="one_more_time.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="one_more_time.menu_1" parent="one_more_time.menu_root"/>
+    <menuitem name="Menu 2" id="one_more_time.menu_2" parent="one_more_time.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="one_more_time.menu_1_list" parent="one_more_time.menu_1"
+              action="one_more_time.action_window"/>
+    <menuitem name="Server to list" id="one_more_time" parent="one_more_time.menu_2"
+              action="one_more_time.action_server"/>
+    -->
+    
+  </data>
+  <data>
+    <record forcecreate="True" id="services_maintain  " model="ir.cron">
+
+      <field name="name">Revision de Facturas Vencidas</field>
+      <field eval="True" name="active" />
+      <field name="user_id" ref="base.user_root"/>
+      <field name="interval_number">24</field>
+      <field name="interval_type">hours</field>
+      <field name="numbercall">-1</field>
+      <field eval="False" name="doall"/>
+      <field eval="'product.product'" name="model"/>
+      <field eval="'process_demo_scheduler_queue'" name="function"/>
+    </record>
+  </data>
+</odoo>
