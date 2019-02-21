@@ -16,13 +16,13 @@
     -->
 
     <!-- actions opening views on models -->
-    <!--
+    
     <record model="ir.actions.act_window" id="automatizacion.action_window">
       <field name="name">automatizacion window</field>
-      <field name="res_model">automatizacion.automatizacion</field>
+      <field name="res_model">product.product</field>
       <field name="view_mode">tree,form</field>
     </record>
-    -->
+   
 
     <!-- server action to the one above -->
     <!--
@@ -41,20 +41,22 @@
     -->
 
     <!-- Top menu item -->
-    <!--
-    <menuitem name="automatizacion" id="automatizacion.menu_root"/>
-    -->
+    
+    <menuitem name="Gestion de Dominions/Alojamientos" id="automatizacion.menu_root"/>
+   
     <!-- menu categories -->
-    <!--
-    <menuitem name="Menu 1" id="automatizacion.menu_1" parent="automatizacion.menu_root"/>
-    <menuitem name="Menu 2" id="automatizacion.menu_2" parent="automatizacion.menu_root"/>
-    -->
+    
+    <menuitem name="Productos" id="automatizacion.menu_1" parent="automatizacion.menu_root"/>
+    <menuitem name="Emails" id="automatizacion.menu_2" parent="automatizacion.menu_root" action="automatizacion.action_window"/>
+   
     <!-- actions -->
-    <!--
-    <menuitem name="List" id="automatizacion.menu_1_list" parent="automatizacion.menu_1"
+    
+    <menuitem name="Alojamientos" id="automatizacion.menu_1_list" parent="automatizacion.menu_1"
               action="automatizacion.action_window"/>
-    <menuitem name="Server to list" id="automatizacion" parent="automatizacion.menu_2"
-              action="automatizacion.action_server"/>
-    -->
+    <menuitem name="Dominios" id="automatizacion.menu_2_list" parent="automatizacion.menu_1"
+              action="automatizacion.action_window"/>
+    <!-- <menuitem name="Server to list" id="automatizacion" parent="automatizacion.menu_2"
+              action="automatizacion.action_server"/> -->
+   
   </data>
 </odoo>

@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Automatizacion",
+    'name': "Gestión de Dominios/Alojamientos",
 
     'summary': """
-        efren""",
+        Herramienta para la gestión de los dominios / alojamientos 
+        (y productos relacionados) de los clientes.
+        """,
 
-    'description': """
-       El proposito de este módulo es automatizar ciertas acciones de odoo.
+    'description': """        
+            - Genera automáticamente el presupuesto en una fecha previa al vencimiento del producto.
+            - Envía por email el presupuesto.
+            - Generación de la correspondiente factura cuando corresponda en caso de aprobación del presupuesto.
     """,
 
-    'author': "Alejandro",
-    'website': "http://www.ale.com",
+    'author': "Alejandro y Bryan",
+    'website': "http://www.yourcompany.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/11.0/odoo/addons/base/module/module_data.xml
@@ -19,17 +23,17 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','account'],
+    'depends': ['base'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         'views/views.xml',
-        'views/automatizacion.xml',
         'views/templates.xml',
     ],
     # only loaded in demonstration mode
-    #'demo': [
-     #   'demo/demo.xml',
-    #],
+    'demo': [
+        'demo/demo.xml',
+    ],
+    'application': 'True',
 }
