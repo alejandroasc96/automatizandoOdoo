@@ -5,7 +5,17 @@ from odoo import models, fields, api
 
 
 
+class domain(models.Model):
+    _name = 'product.product'
+    _inherit ='product.product'
 
+    deadLineDomain = fields.Datetime(string = 'fecha de caducidad')
+
+class host(models.Model):
+    _name = 'product.product'
+    _inherit ='product.product'
+
+    deadLineHost = fields.Datetime(string = 'fecha de caducidad')    
 
 # class automatizacion(models.Model):
 #     _name = 'automatizacion.automatizacion'
