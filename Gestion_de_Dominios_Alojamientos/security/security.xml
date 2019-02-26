@@ -1,0 +1,11 @@
+<?xml version = "1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <data>
+        <record id = "group_responsable" model = "product.product">
+            <field name = "name">Responsable de Servicios</field>
+            <field name="comment"> Grupo encargado de gestionar los servicios proporcionados </field>
+        </record>
+    </data>
+</odoo>

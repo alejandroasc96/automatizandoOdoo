@@ -1,7 +1,7 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-    <!--
+    
     <record model="ir.ui.view" id="automatizacion.list">
       <field name="name">automatizacion list</field>
       <field name="model">automatizacion.automatizacion</field>
@@ -9,20 +9,19 @@
         <tree>
           <field name="name"/>
           <field name="value"/>
-          <field name="value2"/>
         </tree>
       </field>
     </record>
-    -->
+    
 
     <!-- actions opening views on models -->
-    <!--
+    
     <record model="ir.actions.act_window" id="automatizacion.action_window">
       <field name="name">automatizacion window</field>
       <field name="res_model">automatizacion.automatizacion</field>
       <field name="view_mode">tree,form</field>
     </record>
-    -->
+   
 
     <!-- server action to the one above -->
     <!--
@@ -41,20 +40,34 @@
     -->
 
     <!-- Top menu item -->
-    <!--
-    <menuitem name="automatizacion" id="automatizacion.menu_root"/>
-    -->
+    
+    <menuitem name="Automatizacion" id="automatizacion.menu_root"/>
+   
     <!-- menu categories -->
-    <!--
+    
     <menuitem name="Menu 1" id="automatizacion.menu_1" parent="automatizacion.menu_root"/>
-    <menuitem name="Menu 2" id="automatizacion.menu_2" parent="automatizacion.menu_root"/>
+   <!--  <menuitem name="Menu 2" id="automatizacion.menu_2" parent="automatizacion.menu_root"/>
     -->
     <!-- actions -->
-    <!--
+    
     <menuitem name="List" id="automatizacion.menu_1_list" parent="automatizacion.menu_1"
               action="automatizacion.action_window"/>
-    <menuitem name="Server to list" id="automatizacion" parent="automatizacion.menu_2"
-              action="automatizacion.action_server"/>
-    -->
+    <!-- <menuitem name="Server to list" id="automatizacion" parent="automatizacion.menu_2"
+              action="automatizacion.action_server"/> -->
+    <record forcecreate="True" id="revision_due_invoices_v1" model="ir.cron">
+           <field name="name">Revision de Facturas Vencidas</field>
+           <field eval="True" name="active" />
+           <field name="user_id" ref="base.user_root" />
+           <field name="interval_number">24</field>
+           <field name="interval_type">hours</field>
+           <field name="numbercall">-1</field>
+           <field ref="model_account_invoice" name="model_id" />
+            <field name="state">code</field>
+           <field name="code">model.revision_due_invoices()</field>
+           <field eval="False" name="doall"/>
+           <field name="function">True</field>
+
+        </record>
   </data>
+
 </odoo>
