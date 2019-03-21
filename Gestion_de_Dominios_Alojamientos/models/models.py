@@ -5,9 +5,9 @@ from datetime import datetime, date, time, timedelta
 import calendar
 
 # Para debuguear
-# import logging
+import logging
 
-# _logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 
 
@@ -24,12 +24,20 @@ class campo_calculado(models.Model):
     # _inherit = 'product.template' #esto falla cuando lo activas
 
     campoCalculado = fields.Integer(string='Faltan estos días para que caduque',compute="_campocalculado")
+    # referenciamos el campo fechaAle, que se encuentra en el modelo product.temple a account.invoice.line con el nombre que aparece a la izquierda
     
+    rel_field = fields.Integer(string='fechaAlepp', related='product_id.fechaAle')
+    funcionaFunciona = fields.Integer(string='eaeaeaeaeae')
+    
+    
+    
+    # _logger.warning("----------------------------" + str(reference_field_caducidad_producto)) 
     
     @api.depends('create_date')
     def _campocalculado(self):
         for r in self:
             r.campoCalculado = (datetime.now() - datetime.strptime(r.create_date, '%Y-%m-%d %H:%M:%S')).days
+            r.funcionaFunciona = r.campoCalculado - r.rel_field
             # Para debuguear
             # _logger.warning("----------------------------" + str(r.campoCalculado)) 
 

@@ -60,8 +60,10 @@
       <!-- <field name="view_mode">form</field> -->
       <xpath expr="//group/group/field[@name='price_unit']" position="after">
         <field name="campoCalculado"/>
-        <field name="create_date"/>
-        
+        <!-- <field name="fechaAle"/> -->
+        <field name="funcionaFunciona"/>
+        <field name="rel_field"/>
+
       </xpath>
       </field>
     </record>
