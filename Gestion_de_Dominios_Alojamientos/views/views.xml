@@ -51,6 +51,21 @@
       </field>
     </record>
 
+    <!-- Pruebita 3 -->
+    <record id="view_campocalculado_account_form" model="ir.ui.view">
+      <field name="name">account.invoice.campocalculado.form</field>
+      <field name="model">account.invoice.line</field>
+      <field name="inherit_id" ref="account.view_invoice_line_form"/>
+      <field name="arch" type="xml">
+      <!-- <field name="view_mode">form</field> -->
+      <xpath expr="//group/group/field[@name='price_unit']" position="after">
+        <field name="campoCalculado"/>
+        <field name="create_date"/>
+        
+      </xpath>
+      </field>
+    </record>
+
 
     <!-- <record id="product_template_only_form_viewv2" model="ir.ui.view">
       <field name="name">product.template.caducidad</field>

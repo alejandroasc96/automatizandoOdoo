@@ -4,6 +4,11 @@ from odoo import models, fields, api
 from datetime import datetime, date, time, timedelta
 import calendar
 
+# Para debuguear
+# import logging
+
+# _logger = logging.getLogger(__name__)
+
 
 
 
@@ -14,16 +19,19 @@ class domain(models.Model):
     fechaAle = fields.Integer(string='Días hasta caducidad')
 
 class campo_calculado(models.Model):
-    _name = 'account.invoice'
-    _inherit = 'account.invoice'
+    _name = 'account.invoice.line'
+    _inherit = 'account.invoice.line'
+    # _inherit = 'product.template' #esto falla cuando lo activas
 
-    campoCalculado = fields.Integer(string='Faltan estos días para que caduque')
-    ahora = datetime.now()
-
-    @api.depends('create_date', 'superficie')
+    campoCalculado = fields.Integer(string='Faltan estos días para que caduque',compute="_campocalculado")
+    
+    
+    @api.depends('create_date')
     def _campocalculado(self):
         for r in self:
-            r.campoCalculado = r.create_date - ahora
+            r.campoCalculado = (datetime.now() - datetime.strptime(r.create_date, '%Y-%m-%d %H:%M:%S')).days
+            # Para debuguear
+            # _logger.warning("----------------------------" + str(r.campoCalculado)) 
 
 # class host(models.Model):
 #     _name = 'product.product'
@@ -43,7 +51,7 @@ class campo_calculado(models.Model):
     # _inherit ='account.invoice'
 
     # def revision_due_invoices(self, id=None):
-         
+    #  
     #     date_act = fields.Datetime.now()
     #     invoice_due_ids = self.search([('due_invoice','<=',date_act),
     #     ('state','=','open')])
