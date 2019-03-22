@@ -18,6 +18,8 @@ class domain(models.Model):
 
     fechaAle = fields.Integer(string='Días hasta caducidad')
 
+    state = fields.Selection([('30','1 mes'),('open','3 meses'), ('done','6 meses')],'State')
+
 class campo_calculado(models.Model):
     _name = 'account.invoice.line'
     _inherit = 'account.invoice.line'
@@ -27,9 +29,8 @@ class campo_calculado(models.Model):
     # referenciamos el campo fechaAle, que se encuentra en el modelo product.temple a account.invoice.line con el nombre que aparece a la izquierda
     
     rel_field = fields.Integer(string='fechaAlepp', related='product_id.fechaAle')
-    funcionaFunciona = fields.Integer(string='eaeaeaeaeae')
-    
-    
+    total = fields.Integer(string='Días restantes ',compute="_total")
+
     
     # _logger.warning("----------------------------" + str(reference_field_caducidad_producto)) 
     
@@ -37,9 +38,27 @@ class campo_calculado(models.Model):
     def _campocalculado(self):
         for r in self:
             r.campoCalculado = (datetime.now() - datetime.strptime(r.create_date, '%Y-%m-%d %H:%M:%S')).days
-            r.funcionaFunciona = r.campoCalculado - r.rel_field
+            
+
+            # r.funcionaFunciona = r.campoCalculado - r.rel_field
             # Para debuguear
-            # _logger.warning("----------------------------" + str(r.campoCalculado)) 
+            _logger.warning("----------------------------" + str(r.campoCalculado))
+            # self.total = self.campoCalculado - self.rel_field
+            # _logger.warning("restaResta----------------------------" + str(self.total))
+        _logger.warning("----------------------------" + str(r.campoCalculado)) 
+
+    @api.depends('campoCalculado', 'rel_field')
+    def _total(self):
+        self.total = self.rel_field - self.campoCalculado 
+        _logger.warning("----------------------------" + str(self.total)) 
+
+
+
+class prueba_cosas(models.Model):
+    _name = 'account.invoice.line'
+    _inherit = 'account.invoice.line'
+
+    state = fields.Selection([('draft','New'),('open','Started'), ('done','Closed')],'State')
 
 # class host(models.Model):
 #     _name = 'product.product'

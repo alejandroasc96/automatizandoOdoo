@@ -47,6 +47,7 @@
       <!-- <field name="view_mode">form</field> -->
       <xpath expr="//page[@name='general_information']/group/group[@name='group_standard_price']/div[@name='standard_price_uom']" position="after">
         <field name="fechaAle"/>
+        <field name="state"/>
       </xpath>
       </field>
     </record>
@@ -59,10 +60,11 @@
       <field name="arch" type="xml">
       <!-- <field name="view_mode">form</field> -->
       <xpath expr="//group/group/field[@name='price_unit']" position="after">
-        <field name="campoCalculado"/>
+        <!-- <field name="campoCalculado"/> -->
         <!-- <field name="fechaAle"/> -->
-        <field name="funcionaFunciona"/>
-        <field name="rel_field"/>
+        <field name="total"/>
+        <!-- <field name="rel_field"/> -->
+        
 
       </xpath>
       </field>
