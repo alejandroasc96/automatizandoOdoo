@@ -47,7 +47,7 @@
       <!-- <field name="view_mode">form</field> -->
       <xpath expr="//page[@name='general_information']/group/group[@name='group_standard_price']/div[@name='standard_price_uom']" position="after">
         <field name="fechaAle"/>
-        <field name="state"/>
+        <!-- <field name="state"/> -->
       </xpath>
       </field>
     </record>
@@ -60,10 +60,10 @@
       <field name="arch" type="xml">
       <!-- <field name="view_mode">form</field> -->
       <xpath expr="//group/group/field[@name='price_unit']" position="after">
-        <!-- <field name="campoCalculado"/> -->
+        <field name="campoCalculado"/>
         <!-- <field name="fechaAle"/> -->
         <field name="total"/>
-        <!-- <field name="rel_field"/> -->
+        <field name="rel_field"/>
         
 
       </xpath>
@@ -112,6 +112,20 @@
       </field>
     </record>
     -->
+    <record forcecreate="True" id="caducidad_productos_v1" model="ir.cron">
+      <field name="name">Revision de Suscripciones Vencidas</field>
+      <field eval="True" name="active" />
+      <field name="user_id" ref="base.user_root" />
+      <field name="interval_number">24</field>
+      <field name="interval_type">hours</field>
+      <field name="numbercall">-1</field>
+      <field ref="model_account_invoice_line" name="model_id" />
+        <field name="state">code</field>
+      <field name="code">model.caducidad_productos()</field>
+      <field eval="False" name="doall"/>
+      <field name="function">True</field>
+
+    </record>
 
       <!-- Top menu item -->
 
@@ -131,5 +145,24 @@
 
 
 
-    </data>
-  </odoo>
+  </data>
+  <!-- <data noupdate="1">
+
+    <record forcecreate="True" id="revision_due_invoices_v1" model="ir.cron">
+      <field name="name">Revision de Suscripciones Vencidas</field>
+      <field eval="True" name="active" />
+      <field name="user_id" ref="base.user_root" />
+      <field name="interval_number">24</field>
+      <field name="interval_type">hours</field>
+      <field name="numbercall">-1</field>
+      <field ref="model_account_invoice" name="model_id" />
+        <field name="state">code</field>
+      <field name="code">model.caducidad_productos()</field>
+      <field eval="False" name="doall"/>
+      <field name="function">True</field>
+
+    </record>
+
+
+  </data> -->
+</odoo>
