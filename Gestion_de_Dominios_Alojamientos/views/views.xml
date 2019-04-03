@@ -45,7 +45,7 @@
       <field name="inherit_id" ref="product.product_template_form_view"/>
       <field name="arch" type="xml">
       <xpath expr="//page[@name='general_information']/group/group[@name='group_standard_price']/div[@name='standard_price_uom']" position="after">
-        <field name="subscriptionDays"/>
+        <field name="subscriptionDays" attrs="{'invisible':[('type', '!=', 'service')]}"/>
       </xpath>
       </field>
     </record>
@@ -62,11 +62,39 @@
         <!-- <field name="fechaAle"/> -->
         <field name="total"/>
         <field name="rel_field"/>
+        <field name="create_date"/>
         
 
       </xpath>
       </field>
     </record>
+    <!-- Prueba Logo -->
+    <!-- <record id="base.main_partner" model="res.partner">
+        <field name="name">Your company name</field>
+        <field name="image" type="base64" file="Gestion_de_Dominios_Alojamientos/static/img/invetia.png"/>
+         you can edit any field too in the related partner-->
+        <!-- <field name="street">Street name</field>
+        <field name="city">City name</field>
+        <field name="zip">16000</field>
+        <field name="phone">24 11 11 22</field>
+        <field name="email">new@email.com</field>
+        <field name="website">www.web-site.com</field>
+    </record> --> 
+    <!-- Pruebita 4 Template -->
+    <!-- <record id="email_template_edi_invoice" model="mail.template">
+            <field name="name">Invoice - Send by Email</field>
+            <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' %      (object.user_id.name, object.user_id.email) or '')|safe}</field>
+            <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="account_invoices"/>
+            <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+                Message you need to deliver
+            ]]></field>
+        </record> -->
 
 
     <!-- <record id="product_template_only_form_viewv2" model="ir.ui.view">

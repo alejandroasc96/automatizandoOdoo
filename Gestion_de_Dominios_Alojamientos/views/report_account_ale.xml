@@ -26,10 +26,10 @@
                         <div class="row mb64">
                             <div class="col-xs-6" t-if="o.amount">
                                 <strong>Payment Amount: </strong><span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
-                             </div>
+                            </div>
                             <div class="col-xs-6" t-if="o.communication">
                                 <strong>Memo: </strong><span t-field="o.communication"/>
-                             </div>
+                            </div>
                         </div>
                         <table class="table table-condensed">
                             <thead>
