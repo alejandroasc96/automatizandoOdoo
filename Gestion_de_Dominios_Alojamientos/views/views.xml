@@ -1,28 +1,51 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-    <!--
+
     <record model="ir.ui.view" id="Gestion_de_Dominios_Alojamientos.list">
       <field name="name">Gestion_de_Dominios_Alojamientos list</field>
-      <field name="model">Gestion_de_Dominios_Alojamientos.Gestion_de_Dominios_Alojamientos</field>
+      <field name="model">product.template</field>
       <field name="arch" type="xml">
+        <!-- parte editable dentro de la interfaz : -->
         <tree>
-          <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
+        <field name="days_to_end"/>
+        <field name="date_to_end"/>
+          <field name="dead_line_service">
+            <!-- TODO: show actual value -->
+            <field name="months" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"/>
+          </field>
         </tree>
       </field>
     </record>
-    -->
+
+    <record id="deadLine_service_form" model = "ir.ui.view">
+      <field name="name">Gestion_de_Dominios_Alojamientos Form</field>
+      <field name="model">product.template</field>
+      <field name = "inherit_id" ref="product.product_template_form_view"/>
+      <field name="arch" type="xml">
+        <!-- parte editable dentro de la interfaz : -->
+        <xpath expr="//page[@name = 'general_information']/group/group[@name='group_standard_price']" position="inside">
+          
+          <field name="dead_line_service" >
+          <!-- TODO: show actual value -->
+            <field name="months" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"/>
+          </field>
+          <field name="days_to_end"/>
+          <field name="date_to_end"/>
+        </xpath>
+      </field>
+    </record>
+
 
     <!-- actions opening views on models -->
-    
+
     <record model="ir.actions.act_window" id="Gestion_de_Dominios_Alojamientos.action_window">
-      <field name="name">Gestion_de_Dominios_Alojamientos window</field>
-      <field name="res_model">product.product</field>
+      <field name="name">Gestion_de_Dominios_Alojamientos</field> 
+      <field name="res_model">product.template</field> 
       <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="Gestion_de_Dominios_Alojamientos.list"/>
     </record>
-   
+
 
     <!-- server action to the one above -->
     <!--
@@ -41,22 +64,15 @@
     -->
 
     <!-- Top menu item -->
-    
+
     <menuitem name="Gestion de Dominions/Alojamientos" id="Gestion_de_Dominios_Alojamientos.menu_root"/>
-   
+
     <!-- menu categories -->
-    
-    <menuitem name="Productos" id="Gestion_de_Dominios_Alojamientos.menu_1" parent="Gestion_de_Dominios_Alojamientos.menu_root"/>
-    <menuitem name="Emails" id="Gestion_de_Dominios_Alojamientos.menu_2" parent="Gestion_de_Dominios_Alojamientos.menu_root" action="Gestion_de_Dominios_Alojamientos.action_window"/>
-   
-    <!-- actions -->
-    
-    <menuitem name="Alojamientos" id="Gestion_de_Dominios_Alojamientos.menu_1_list" parent="Gestion_de_Dominios_Alojamientos.menu_1"
-              action="Gestion_de_Dominios_Alojamientos.action_window"/>
-    <menuitem name="Dominios" id="Gestion_de_Dominios_Alojamientos.menu_2_list" parent="Gestion_de_Dominios_Alojamientos.menu_1"
-              action="Gestion_de_Dominios_Alojamientos.action_window"/>
-    <!-- <menuitem name="Server to list" id="Gestion_de_Dominios_Alojamientos" parent="Gestion_de_Dominios_Alojamientos.menu_2"
-              action="Gestion_de_Dominios_Alojamientos.action_server"/> -->
-   
+
+    <menuitem name="Servicios" id="Gestion_de_Dominios_Alojamientos.menu_1" parent="Gestion_de_Dominios_Alojamientos.menu_root" action="Gestion_de_Dominios_Alojamientos.action_window"/>
+    <!-- <menuitem name="Emails" id="Gestion_de_Dominios_Alojamientos.menu_2" parent="Gestion_de_Dominios_Alojamientos.menu_root" action="Gestion_de_Dominios_Alojamientos.action_window"/> -->
+
+    <!-- <menuitem name="Server to list" id="Gestion_de_Dominios_Alojamientos" parent="Gestion_de_Dominios_Alojamientos.menu_2" action="Gestion_de_Dominios_Alojamientos.action_server"/> -->
+
   </data>
 </odoo>

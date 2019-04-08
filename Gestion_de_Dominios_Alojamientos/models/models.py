@@ -1,21 +1,65 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from datetime import datetime, timedelta
+
+class DeadLineTime(models.Model):
+    _name = 'deadline'
+    months = fields.Integer()
 
 
+class Service(models.Model):
+    _name = 'product.template'
+    _inherit = 'product.template'
 
+    dead_line_service = fields.Many2one('deadline', string="Dead Line Service")
+    days_to_end = fields.Integer(string='Days To Die', compute="_getDaysToDie", store=False)
+    date_to_end = fields.Date(string='Date To Die',compute="_getDateToDie",store=True)
 
-class domain(models.Model):
-    _name = 'product.product'
-    _inherit ='product.product'
+    @api.one
+    @api.depends('create_date')
+    def _getDaysToDie(self):
+        for r in self:
+            r.days_to_end = r.dead_line_service.months-(
+                datetime.now() - datetime.strptime(r.create_date, '%Y-%m-%d %H:%M:%S')).days
+    
+    @api.one
+    @api.depends('create_date')
+    def _getDateToDie(self):
+        for r in self:
+            total_days = 0
+            for i in range(0, r.dead_line_service.months % 12):
+                if datetime.now().month == 1:
+                    total_days += 31
+                if datetime.now().month == 2:
+                    total_days += 28
+                if datetime.now().month == 3:
+                    total_days += 31
+                if datetime.now().month == 4:
+                    total_days += 30
+                if datetime.now().month == 5:
+                    total_days += 31
+                if datetime.now().month == 6:
+                    total_days += 30
+                if datetime.now().month == 7:
+                    total_days += 31
+                if datetime.now().month == 8:
+                    total_days += 31
+                if datetime.now().month == 9:
+                    total_days += 30
+                if datetime.now().month == 10:
+                    total_days += 31
+                if datetime.now().month == 11:
+                    total_days += 30
+                if datetime.now().month == 12:
+                    total_days += 31
+            r.date_to_end = datetime.strptime(
+                r.create_date, '%Y-%m-%d %H:%M:%S') + timedelta(total_days+(r.dead_line_service.months / 12*365))
 
-    deadLineDomain = fields.Datetime(string = 'fecha de caducidad')
+    
+            # r.dead_line_service.months-(
+            #     datetime.now() - datetime.strptime(r.create_date, '%Y-%m-%d %H:%M:%S')).days            
 
-class host(models.Model):
-    _name = 'product.product'
-    _inherit ='product.product'
-
-    deadLineHost = fields.Datetime(string = 'fecha de caducidad')    
 
 # class automatizacion(models.Model):
 #     _name = 'automatizacion.automatizacion'
@@ -29,7 +73,7 @@ class host(models.Model):
     # _inherit ='account.invoice'
 
     # def revision_due_invoices(self, id=None):
-         
+
     #     date_act = fields.Datetime.now()
     #     invoice_due_ids = self.search([('due_invoice','<=',date_act),
     #     ('state','=','open')])
@@ -53,4 +97,3 @@ class host(models.Model):
     #                     }
     #         mail_id = self.env['mail.mail'].create(mail_vals)
     #         mail_id.send()
-    
