@@ -1,22 +1,47 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-
+    <record id="example_email_template" model="mail.template">
+      <field name="name">Example e-mail template</field>
+      <field name="email_from">${object.company_id and object.company_id.email or ''}</field>
+      <field name="subject">Congratz ${object.name}</field>
+      <field name="email_to">${object.email|safe}</field>
+      <field name="lang">${object.lang}</field>
+      <field name="model_id" ref="base.model_res_partner"/>
+      <field name="auto_delete" eval="True"/>
+      <field name="body_html">
+        <![CDATA[
+            <p>Dear ${(object.name)},<br/><br/>
+            Good job, you've just created your first e-mail template!<br/></p>
+                  Regards,<br/>
+                  ${(object.company_id.name)}
+          ]]>
+      </field>
+    </record>
     <record model="ir.ui.view" id="Gestion_de_Dominios_Alojamientos.list">
-      <field name="name">Gestion_de_Dominios_Alojamientos list</field>
+      <field name="name">Gestion_de_Dominios_Alojamientos_list</field>
       <field name="model">product.template</field>
       <field name="arch" type="xml">
         <!-- parte editable dentro de la interfaz : -->
         <tree>
-        <field name="days_to_end"/>
-        <field name="date_to_end"/>
-          <field name="dead_line_service">
-            <!-- TODO: show actual value -->
-            <field name="months" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"/>
-          </field>
+          <!-- <field name="days_to_end"/>
+          <field name="date_to_end"/> -->
+          <field name="dead_line_service"/>
         </tree>
       </field>
     </record>
+
+
+    <!-- vista calendario -->
+    <!-- <record model="ir.ui.view" id="Gestion_de_Dominios_Alojamientos.calendar">
+      <field name="name">Gestion_de_Dominios_Alojamientos_list</field>
+      <field name="model">product.template</field>
+      <field name="arch" type="xml">
+        <calendar string="date_to_end" date_start="date_to_end">
+          <field name="days_to_end"/>
+        </calendar>
+      </field>
+    </record> -->
 
     <record id="deadLine_service_form" model = "ir.ui.view">
       <field name="name">Gestion_de_Dominios_Alojamientos Form</field>
@@ -25,13 +50,26 @@
       <field name="arch" type="xml">
         <!-- parte editable dentro de la interfaz : -->
         <xpath expr="//page[@name = 'general_information']/group/group[@name='group_standard_price']" position="inside">
-          
-          <field name="dead_line_service" >
+          <field name="dead_line_service" context="{'months':'months'}">
           <!-- TODO: show actual value -->
-            <field name="months" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"/>
+            <field name="months"/>
           </field>
-          <field name="days_to_end"/>
+          <!-- <field name="days_to_end"/>
+          <field name="date_to_end"/> -->
+          <field name="create_date"/>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="deadLine_service_form" model = "ir.ui.view">
+      <field name="name">service_line</field>
+      <field name="model">account.invoice</field>
+      <field name = "inherit_id" ref="account.invoice_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//notebook/page/field/tree" position="inside">
           <field name="date_to_end"/>
+          <field name="create_date"/>
+          <field name="days_to_end"/>
         </xpath>
       </field>
     </record>
@@ -42,8 +80,8 @@
     <record model="ir.actions.act_window" id="Gestion_de_Dominios_Alojamientos.action_window">
       <field name="name">Gestion_de_Dominios_Alojamientos</field> 
       <field name="res_model">product.template</field> 
-      <field name="view_mode">tree,form</field>
       <field name="view_id" ref="Gestion_de_Dominios_Alojamientos.list"/>
+      <field name="view_mode">tree,form</field>
     </record>
 
 
