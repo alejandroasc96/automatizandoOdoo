@@ -13,6 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 
+
 class domain(models.Model):
     _name = 'product.template'
     _inherit ='product.template'
@@ -57,19 +58,22 @@ class caducidad_productos(models.Model):
                 mail_to = r.invoice_id.partner_id.email
                 userID = r.invoice_id.user_id.id
                 partnerID = r.invoice_id.partner_id.id
+                # fecha= ('2019-04-09 23:36:09')
+                fecha = datetime.strftime(datetime.now(),"%Y-%m-%d %H:%M:%S")
 
                 # nombre de la referencia de facturas
-                # _logger.warning("-----------------------nombrereferencia-----" + str(r.invoice_id.name)) 
+                _logger.warning("-----------------------fecha-----" + str((datetime.now() - datetime.strptime(r.create_date, '%Y-%m-%d %H:%M:%S'))))
+                _logger.warning("----UserID-----" + str(fecha)) 
                 # originAle = r.invoice_id.origin
 
-                mail_vals = {
-                            'subject': 'Notificacion de Facturas Vencidas',
-                            'author_id': userID,
-                            'email_from': mail_from,
-                            'email_to': mail_to,
-                            'message_type':'email',
-                            'body_html': 'Se te están caducadon las suscripciones',
-                                }
+                # mail_vals = {
+                #             'subject': 'Notificacion de Facturas Vencidas',
+                #             'author_id': userID,
+                #             'email_from': mail_from,
+                #             'email_to': mail_to,
+                #             'message_type':'email',
+                #             'body_html': 'Se te están caducadon las suscripciones',
+                #                 }
                             
             # _logger.warning("--------------------------1--" + str(r.invoice_id.origin))
             # _logger.warning("--------------------------2--" + str(r.invoice_id.origin.name))
@@ -80,13 +84,16 @@ class caducidad_productos(models.Model):
                 vals = {
                         'partner_id': 3,
                         'state': 'draft',
-                        'validity_date': datetime.now(),
+                        # 'validity_date': date.today(),
+                        'format_date': fecha,
                         'payment_term_id': 1,
-                        'user_id': userID,
+                        'user_id': r.invoice_id.partner_id.user_id.name,
                         'company_id': r.invoice_id.user_id.company_id.id,
                         'partner_invoice_id': 3,
-                        'partner_shipping_id': 3,
+                        'partner_shipping_id': r.invoice_id.user_id.id,
                         'template_id': 3,
+                        'product_id': 1,
+                        'force_email': True,
                         # 'order_policy': 'manual'
                                 }
 
@@ -115,7 +122,7 @@ class caducidad_productos(models.Model):
                 #         if msg_id: 
                 #             mail_obj.send(cr, uid, [msg_id], context=context) 
                 #         return True
-  
+
 
 
                 # ----------------------------------- Enviar factura ---------------------------------
@@ -142,9 +149,9 @@ class caducidad_productos(models.Model):
                 # ------ Generando Presupuesto --------
                 saletivo = self.env['sale.order']
                 new = saletivo.create(vals)
-                template_obj = self.env['mail.template'].search([('name','=','Tiburcio')], limit=1)
-                template_obj.generate_mail(new)
-                mail_id = self.env['mail.mail'].send_mail(template_obj)
+                template_obj = self.env['mail.template'].search([('name','=','Bryan')], limit=1)
+                template_obj.generate_email(new)
+                mail_id = self.env['mail.mail'].send_mail(template_obj, force_send=True)
                 _logger.warning("-aaaaa------------------------legueeeee---" )
             
 
