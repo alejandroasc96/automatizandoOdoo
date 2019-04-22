@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 
-
+# new field on Product.Template
 class domain(models.Model):
     _name = 'product.template'
     _inherit ='product.template'
@@ -25,8 +25,6 @@ class campo_calculado(models.Model):
     _inherit = 'account.invoice.line'
 
     campoCalculado = fields.Integer(string='Días que han pasado',compute="_campocalculado",store=False)
-    # referenciamos el campo fechaAle, que se encuentra en el modelo product.temple a account.invoice.line con el nombre que aparece a la izquierda
-    
     rel_field = fields.Integer(string='Fecha Caducidad Establecida',related='product_id.subscription_days')
     total = fields.Integer(string='Días restantes ',compute='_total',store=False)
 
@@ -42,153 +40,133 @@ class campo_calculado(models.Model):
     def _total(self):
         self.total = self.rel_field - self.campoCalculado 
 
-class caducidad_productos(models.Model):
-    _name = 'account.invoice.line'
-    _inherit = 'account.invoice.line'
 
-    rel_name = fields.Integer(string='Fecha Caducidad Establecida',related='product_id.subscription_days')
+class revisando_factura_clientes(models.Model):
+    _name = 'res.partner'
+    _inherit = 'res.partner'
+
     @api.model
-    def caducidad_productos(self):
-        total_dias = self.search([])
-        print ("### Revisando las Facturas Vencidas")
-        for r in total_dias:
-            ale = r.rel_field - ((datetime.now() - datetime.strptime(r.create_date, '%Y-%m-%d %H:%M:%S')).days)
-            if (ale<=30):
-                mail_from = r.invoice_id.user_id.email
-                mail_to = r.invoice_id.partner_id.email
-                userID = r.invoice_id.user_id.id
-                partnerID = r.invoice_id.partner_id.id
-                # fecha= ('2019-04-09 23:36:09')
-                fecha = datetime.strftime(datetime.now(),"%Y-%m-%d %H:%M:%S")
+    def revisando_factura_clientes(self):
+        clientes = self.search([])
+        # _logger.warning("--ArrayClientes--------------------------" + str(clientes))
+        for r in clientes:
+            # _logger.warning("--NombreClientes--------------------------" + str(r.name)+ ":" + str((r.invoice_ids)))
+            # _logger.warning("--idFacturas--------------------------" + str(type(r.invoice_ids)))
 
-                # nombre de la referencia de facturas
-                _logger.warning("-----------------------fecha-----" + str((datetime.now() - datetime.strptime(r.create_date, '%Y-%m-%d %H:%M:%S'))))
-                _logger.warning("----UserID-----" + str(fecha)) 
-                # originAle = r.invoice_id.origin
+            facturas = r.invoice_ids
+            listaProductos = []
+            fecha = datetime.strftime(datetime.now(),"%d/%m/%Y %H:%M:%S")
+            for t in facturas:
+                _logger.warning("--idFactura--------------------------" + str(t.id))
+                # _logger.warning("--idFactura--------------------------" + str(t.create_date))
 
-                # mail_vals = {
-                #             'subject': 'Notificacion de Facturas Vencidas',
-                #             'author_id': userID,
-                #             'email_from': mail_from,
-                #             'email_to': mail_to,
-                #             'message_type':'email',
-                #             'body_html': 'Se te están caducadon las suscripciones',
-                #                 }
-                            
-            # _logger.warning("--------------------------1--" + str(r.invoice_id.origin))
-            # _logger.warning("--------------------------2--" + str(r.invoice_id.origin.name))
-            # _logger.warning("---------------------------3-" + str(r.invoice_id.name))
-                # template_obj = self.env['mail.template'].search([('name','=','Bryan')], limit=1) 
-                _logger.warning("--company--------------------------" + str(r.invoice_id.user_id.company_id.id))
+                # _logger.warning("--LineasFactura--------------------------" + str(t.invoice_line_ids))
+                linea = t.invoice_line_ids
+                _logger.warning("--linea--------------------------" + str(len(linea)))
+                
+                
+                
+                for j in linea:
+                    _logger.warning("--idProducto--------------------------" + str(j.product_id.id))
+                    ale = j.rel_field - ((datetime.now() - datetime.strptime(j.create_date, '%Y-%m-%d %H:%M:%S')).days)
+                    if (ale<=30):
+                        listaProductos.append(j.product_id.id)
+            
+            _logger.warning("--ArrayDeProductosQueTieneContratadoCliente--------------------------" + str(len(listaProductos)))
 
-                vals = {
-                        'partner_id': 3,
-                        'state': 'draft',
-                        # 'validity_date': date.today(),
-                        'format_date': fecha,
-                        'payment_term_id': 1,
-                        'user_id': r.invoice_id.partner_id.user_id.name,
-                        'company_id': r.invoice_id.user_id.company_id.id,
-                        'partner_invoice_id': 3,
-                        'partner_shipping_id': r.invoice_id.user_id.id,
-                        'template_id': 3,
-                        'product_id': 1,
-                        'force_email': True,
+        # ------ Mi Generando Presupuesto --------
+            vals = {
+                        'partner_id': r.id,
+                        # 'state': 'draft',
+                        # # 'validity_date': date.today(),
+                        # 'date_order': "2019-04-22 13:25:22",
+                        # 'payment_term_id': r.invoice_id.payment_term_id.id,
+                        # 'user_id': r.invoice_id.partner_id.user_id.name,
+                        # 'company_id': r.invoice_id.user_id.company_id.id,
+                        # 'partner_invoice_id': r.partner_id.id,
+                        # 'partner_shipping_id': r.invoice_id.user_id.id,
+                        # # 'template_id': 13,
+                        'pricelist_id': 1,
+                        
                         # 'order_policy': 'manual'
                                 }
+            mail_vals = {
+                        'partner_id': r.id,
+                        # 'state': 'draft',
+                        # # 'validity_date': date.today(),
+                        # 'date_order': fecha,
+                        # 'payment_term_id': r.invoice_id.payment_term_id.id,
+                        # 'user_id': r.invoice_id.partner_id.user_id.name,
+                        # 'company_id': r.invoice_id.user_id.company_id.id,
+                        # 'partner_invoice_id': r.partner_id.id,
+                        # 'partner_shipping_id': r.invoice_id.user_id.id,
+                        # # 'template_id': 13,
+                        'pricelist_id': 1,
+                        'product_id': listaProductos,
+                        
+                        # 'order_policy': 'manual'
+                                }
+            saletivo = self.env['sale.order']
+            # new = saletivo.create(vals)
+            # template_obj = self.env['mail.template'].search([('name','=','Ale')], limit=1)
+            # Ale = template_obj.generate_email(mail_vals)
+            # mail = self.env['mail.mail'].create(Ale)
+            # mail.send(False,True)
+
+            # ----Ejemplo de internet ,creando un pedido -------
+            # for sale_order in self.browse(cr, uid, ids, context=context):
+            # agreement = {
+            #     'name': sale_order.name,
+            #     'partner_id': sale_order.partner_id.id,
+            #     'company_id': sale_order.company_id.id,
+            #     'start_date': datetime.datetime.now().strftime("%Y-%m-%d"),
+            # }
+            # agreement_id = agreement_obj.create(cr, uid, agreement,
+            #                                     context=context)
+            # agreement_ids.append(agreement_id)
+            #     for order_line in sale_order.order_line:
+            #         agreement_line = {
+            #             'agreement_id': agreement_id,
+            #             'product_id': order_line.product_id.id,
+            #             'discount': order_line.discount,
+            #             'quantity': order_line.product_uom_qty,
+            #         }
+            #         agreement_line_obj.create(cr, uid, agreement_line,
+            #                                 context=context)
+
+            # 2 Ejemplo internet
+            @api.model
+            def create_sales_order(self, orderline, customer_id, sign):
+                sale_pool = self.env['sale.order']
+                prod_pool = self.env['product.product']
+                sale_line_pool = self.env['sale.order.line']
+                sale_no = ''
+                sale = {}
+                if customer_id:
+                    customer_id = int(customer_id)
+                    sale = {'partner_id': customer_id, 
+                            'partner_invoice_id': customer_id,
+                            'partner_shipping_id': customer_id, 
+                            'signature': sign}
+                    sale_id = sale_pool.create(sale)
+                    if sale_id:
+                        sale_brw = sale_id
+                        sale_brw.onchange_partner_id()
+                        #create sale order line
+                        for line in orderline:
+                            sale_line = {}
+                            if line.get('product_id'):
+                                prod_rec = prod_pool.browse(line['product_id'])
+                                sale_line.update({'name': prod_rec.name or False,
+                                                'product_id': prod_rec.id,
+                                                'product_uom_qty': line['qty'],
+                                                'discount': line.get('discount'),
+                                                'order_id': sale_id.id})
+                                sale_line_id = sale_line_pool.create(sale_line)
+                                for line in sale_line_id:
+                                    line.product_id_change()
+                return {"name": sale_brw.name, "id": sale_brw.id } 
 
 
-                # ------------------------- Prueba Internet -------------------------------
-                # def send_email(self,cr,uid,ids,context=None):
-                #         template_obj = self.pool.get('mail.template')
-                #         ir_model_data = self.pool.get('ir.model.data')
-                #         # Create a template id by either of the ways.
-                #         #template_id = template_obj.create(cr, uid,{'name':'Template Name','model_id':'Your model id'})
-                #         template_id= ir_model_data.get_object_reference(cr, uid, 'sale.order', 'xml_template_id')[1]
-                #             if template_id:
-                #                 #------------ if a template id is created -------------------
-                #                 values = template_obj.generate_email(cr, uid, template_id, ids[0], context=context)
-                #                 #  Set/Modify the values for the template.
-                #                 values['subject'] = 'subject you want to show'
-                #                 values['email_to'] = mail_to
-                #                 values['partner_to'] = mail_from
-                #                 values['body'] = 'Se te están caducadon las suscripciones',
-                #                     .....
-                #                     .....
-                            
-                #         #---------------------------------------------------------------
-                #         mail_obj = self.pool.get('mail.mail') 
-                #         msg_id = mail_obj.create(cr, uid, values, context=context) 
-                #         if msg_id: 
-                #             mail_obj.send(cr, uid, [msg_id], context=context) 
-                #         return True
 
 
-
-                # ----------------------------------- Enviar factura ---------------------------------
-                # template_obj = self.env['mail.template'].search([('name','=','Tiburcio')], limit=1) 
-                # template_obj.generate_mail(r.id)
-                # mail_id = self.env['mail.mail'].send_mail(template_obj)
-
-                # _logger.warning("----------------------------" + str(r.invoice_id))
-                # if (ale==15):
-
-                _logger.warning("-bbbbbb------------------------legueeeee---" )
-                # ----------Creación de nuevo Presupuesto---------------------------
-                # arayy = r.search(['company_id.name','invoice_id.id','invoice_id.partner_shipping_id',])
-                # name =''
-                # pres = self.env['sale.order'].create(r, vals))
-                # pres = self.env['sale.order'].action_confirm()
-                # template_obj = self.env['mail.template'].search([('name','=','Bryan')], limit=1) 
-                # template_obj.generate_mail(pres)
-                # mail_id = self.env['mail.mail'].send_mail(template_obj)
-
-
-
-
-                # ------ Generando Presupuesto --------
-                saletivo = self.env['sale.order']
-                new = saletivo.create(vals)
-                template_obj = self.env['mail.template'].search([('name','=','Bryan')], limit=1)
-                template_obj.generate_email(new)
-                mail_id = self.env['mail.mail'].send_mail(template_obj, force_send=True)
-                _logger.warning("-aaaaa------------------------legueeeee---" )
-            
-
-
-
-        # def send_email(self,cr,uid,ids,context=None):
-        #     template_obj = self.pool.get('mail.template')
-        #     ir_model_data = self.pool.get('ir.model.data')
-        #     # Create a template id by either of the ways.
-        #     #template_id = template_obj.create(cr, uid,{'name':'Template Name','model_id':'Your model id'})
-        #     template_id= ir_model_data.get_object_reference(cr, uid, 'module_name', 'xml_template_id')[1]
-        #     if template_id:
-        #         #------------ if a template id is created -------------------
-        #         values = template_obj.generate_email(cr, uid, template_id, ids[0], context=context)
-        #         #  Set/Modify the values for the template.
-        #         values['subject'] = subject you want to show
-        #         values['email_to'] = receiver of the email
-        #         values['partner_to'] = partner ids
-        #         values['body'] = body_html
-        #             .....
-        #             .....
-        #         #--------------------------------------------------------------
-        #         #----------------if template id is not created-----------------
-        #         values = {
-        #         'subject': 'subect ',
-        #         'body_html': 'Message to be sent',
-        #         'email_to': receiver email,
-        #         'email_from': 'sender_email',
-        #         values['partner_to'] : partner ids
-        #         ......
-        #         ......
-        #         }
-        #     #---------------------------------------------------------------
-        #     mail_obj = self.pool.get('mail.mail') 
-        #     msg_id = mail_obj.create(cr, uid, values, context=context) 
-        #     if msg_id: 
-        #         mail_obj.send(cr, uid, [msg_id], context=context) 
-        #     return True
-    
-    

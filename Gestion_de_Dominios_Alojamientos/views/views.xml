@@ -22,6 +22,12 @@
       <field name="res_model">product.template</field>
       <field name="view_mode">tree,form</field>
     </record>
+    <!-- <record model="ir.actions.act_window" id="renovando.action_window">
+      <field name="name">Renovando window</field>
+      <field name="res_model">renovando.renovando</field>
+      <field name="view_mode">tree,form</field>
+    </record> -->
+    
 
 
     <!-- Proyecto personal -->
@@ -30,7 +36,7 @@
       <field name="model">product.template</field>
       <field name="inherit_id" ref="product.product_template_form_view"/>
       <field name="arch" type="xml">
-       <field name="view_mode">form</field> 
+      <field name="view_mode">form</field> 
       <xpath expr="//page[@name='purchase_ok']" position="after">
         
       <field name="fechaAle"/>
@@ -46,7 +52,6 @@
       <field name="arch" type="xml">
       <xpath expr="//page[@name='general_information']/group/group[@name='group_standard_price']/div[@name='standard_price_uom']" position="after">
         <field name="subscription_days" attrs="{'invisible':[('type', '!=', 'service')]}"/>
-        <field name="id"/>
       </xpath>
       </field>
     </record>
@@ -139,7 +144,7 @@
       </field>
     </record>
     -->
-    <record forcecreate="True" id="caducidad_productos_v1" model="ir.cron">
+    <record forcecreate="True" id="revisando_factura_clientes_v1" model="ir.cron">
       <field name="name">Revision de Suscripciones Vencidas</field>
       <field eval="True" name="active" />
       <field name="user_id" ref="base.user_root" />
@@ -147,9 +152,9 @@
       <field name="interval_type">hours</field>
       <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 05:00:00')" />
       <field name="numbercall">-1</field>
-      <field ref="model_account_invoice_line" name="model_id" />
+      <field ref="model_res_partner" name="model_id" />
         <field name="state">code</field>
-      <field name="code">model.caducidad_productos()</field>
+      <field name="code">model.revisando_factura_clientes()</field>
       <field eval="False" name="doall"/>
       <field name="function">True</field>
 
@@ -196,7 +201,7 @@
       <!-- actions -->
 
       <menuitem name="Alojamientos" id="Gestion_de_Dominios_Alojamientos.menu_1_list" parent="Gestion_de_Dominios_Alojamientos.menu_1" action="Gestion_de_Dominios_Alojamientos.action_window"/>
-      <!-- <menuitem name="Dominios" id="Gestion_de_Dominios_Alojamientos.menu_2_list" parent="Gestion_de_Dominios_Alojamientos.menu_1" action="Gestion_de_Dominios_Alojamientos.action_window"/> -->
+      <!-- <menuitem name="Renovando" id="Gestion_de_Dominios_Alojamientos.menu_2_list" parent="Gestion_de_Dominios_Alojamientos.menu_2" action="renovando.action_window"/> -->
       <!-- <menuitem name="Server to list" id="Gestion_de_Dominios_Alojamientos" parent="Gestion_de_Dominios_Alojamientos.menu_2" action="Gestion_de_Dominios_Alojamientos.action_server"/> -->
 
 
