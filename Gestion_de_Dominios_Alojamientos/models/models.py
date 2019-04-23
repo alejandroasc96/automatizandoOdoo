@@ -45,9 +45,11 @@ class revisando_factura_clientes(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
+    
     @api.model
     def revisando_factura_clientes(self):
         clientes = self.search([])
+        
         # _logger.warning("--ArrayClientes--------------------------" + str(clientes))
         for r in clientes:
             # _logger.warning("--NombreClientes--------------------------" + str(r.name)+ ":" + str((r.invoice_ids)))
@@ -55,6 +57,8 @@ class revisando_factura_clientes(models.Model):
 
             facturas = r.invoice_ids
             listaProductos = []
+            # diccionario = {}
+            diccionario = dict()
             fecha = datetime.strftime(datetime.now(),"%d/%m/%Y %H:%M:%S")
             for t in facturas:
                 _logger.warning("--idFactura--------------------------" + str(t.id))
@@ -63,22 +67,6 @@ class revisando_factura_clientes(models.Model):
                 # _logger.warning("--LineasFactura--------------------------" + str(t.invoice_line_ids))
                 linea = t.invoice_line_ids
                 _logger.warning("--linea--------------------------" + str(len(linea)))
-
-                valos = {
-                            'name': 'S00032',#t.name,
-                            'state': 'sale',#invoice_exept',
-                            'date_order': '04/23/2019', #t.date_order,
-                            'date_create': '04/23/2019',#t.date_order,
-                            'date_confirm': '04/23/2019',#t.date_confirm,
-                            'user_id': t.user_id.id,
-                            'partner_id': t.partner_id.id,
-                            'order_policy': 'manual',
-                            'product_id': 1,
-                        }
-
-                res = self.env['sale.order'].create(valos)
-                return res
-                
                 
                 
                 for j in linea:
@@ -86,118 +74,53 @@ class revisando_factura_clientes(models.Model):
                     ale = j.rel_field - ((datetime.now() - datetime.strptime(j.create_date, '%Y-%m-%d %H:%M:%S')).days)
                     if (ale<=30):
                         listaProductos.append(j.product_id.id)
-            
-            _logger.warning("--ArrayDeProductosQueTieneContratadoCliente--------------------------" + str(len(listaProductos)))
-
-        # ------ Mi Generando Presupuesto --------
-            # vals = {
-            #             'partner_id': r.id,
-            #             # 'state': 'draft',
-            #             # # 'validity_date': date.today(),
-            #             # 'date_order': "2019-04-22 13:25:22",
-            #             # 'payment_term_id': r.invoice_id.payment_term_id.id,
-            #             # 'user_id': r.invoice_id.partner_id.user_id.name,
-            #             # 'company_id': r.invoice_id.user_id.company_id.id,
-            #             # 'partner_invoice_id': r.partner_id.id,
-            #             # 'partner_shipping_id': r.invoice_id.user_id.id,
-            #             # # 'template_id': 13,
-            #             'pricelist_id': 1,
-                        
-            #             # 'order_policy': 'manual'
-            #                     }
-            # mail_vals = {
-            #             'partner_id': r.id,
-            #             # 'state': 'draft',
-            #             # # 'validity_date': date.today(),
-            #             # 'date_order': fecha,
-            #             # 'payment_term_id': r.invoice_id.payment_term_id.id,
-            #             # 'user_id': r.invoice_id.partner_id.user_id.name,
-            #             # 'company_id': r.invoice_id.user_id.company_id.id,
-            #             # 'partner_invoice_id': r.partner_id.id,
-            #             # 'partner_shipping_id': r.invoice_id.user_id.id,
-            #             # # 'template_id': 13,
-            #             'pricelist_id': 1,
-            #             'product_id': listaProductos,
-                        
-            #             # 'order_policy': 'manual'
-            #                     }
-            # saletivo = self.env['sale.order']
-            # new = saletivo.create(vals)
-            # template_obj = self.env['mail.template'].search([('name','=','Ale')], limit=1)
-            # Ale = template_obj.generate_email(mail_vals)
-            # mail = self.env['mail.mail'].create(Ale)
-            # mail.send(False,True)
-                # @api.one
-                # def create_sale_order(self):
-                    # ale = self.env['sale.order']
-                    # for h in ale:
-                    #     valos = {
-                    #         'name': self.name,
-                    #         'state': 'invoice_exept',
-                    #         'date_order': self.date_order,
-                    #         'date_create': self.date_order,
-                    #         'date_confirm': self.date_confirm,
-                    #         'user_id': self.user_id.id,
-                    #         'partner_id': self.partner_id.id,
-                    #         'order_policy': 'manual'
-                    #     }
-
-                    #     res = self.env['sale.order'].create(valos)
-                    #     return res
-            # ----Ejemplo de internet ,creando un pedido -------
-            # for r in saletivo:
-            #     agreement = {
-            #         'name': r.name,
-            #         'partner_id': r.partner_id.id,
-            #         'company_id': r.company_id.id,
-            #         'start_date': datetime.datetime.now().strftime("%Y-%m-%d"),
-            #     }
-            #     agreement_id = agreement_obj.create(cr, uid, agreement,
-            #                                         context=context)
-            #     agreement_ids.append(agreement_id)
-            #     for order_line in sale_order.order_line:
-            #         agreement_line = {
-            #             'agreement_id': agreement_id,
-            #             'product_id': order_line.product_id.id,
-            #             'discount': order_line.discount,
-            #             'quantity': order_line.product_uom_qty,
-            #         }
-            #         agreement_line_obj.create(cr, uid, agreement_line,
-            #                                 context=context)
-
-            # 2 Ejemplo internet
-        # @api.one
-        # def create_sales_order(self, orderline, customer_id, sign):
-        #     _logger.warning("--Legueeee--------------------------")
-        #     sale_pool = self.env['sale.order']
-        #     prod_pool = self.env['product.product']
-        #     sale_line_pool = self.env['sale.order.line']
-        #     sale_no = ''
-        #     sale = {}
-        #     if customer_id:
-        #         customer_id = int(customer_id)
-        #         sale = {'partner_id': customer_id, 
-        #                 'partner_invoice_id': customer_id,
-        #                 'partner_shipping_id': customer_id, 
-        #                 'signature': sign}
-        #         sale_id = sale_pool.create(sale)
-        #         if sale_id:
-        #             sale_brw = sale_id
-        #             sale_brw.onchange_partner_id()
-        #             #create sale order line
-        #             for line in orderline:
-        #                 sale_line = {}
-        #                 if line.get('product_id'):
-        #                     prod_rec = prod_pool.browse(line['product_id'])
-        #                     sale_line.update({'name': prod_rec.name or False,
-        #                                     'product_id': prod_rec.id,
-        #                                     'product_uom_qty': line['qty'],
-        #                                     'discount': line.get('discount'),
-        #                                     'order_id': sale_id.id})
-        #                     sale_line_id = sale_line_pool.create(sale_line)
-        #                     for line in sale_line_id:
-        #                         line.product_id_change()
-        #     return {"name": sale_brw.name, "id": sale_brw.id } 
+                        diccionario = {1: j.product_id.name,
+                                        2: j.product_id,
+                                        3: j.quantity,
+                                        4: 0.00,}#line.get('discount'),}
+            self.create_sales_order( diccionario, r.id)
+    @api.model
+    def create_sales_order(self, orderline, customer_id):
+        for g in orderline:
+            _logger.warning("--ggggggggg--------------------------"+str(g)+"\n"+str(type(g)))
+        _logger.warning("--Legueeee--------------------------")
+        _logger.warning("--orderLine--------------------------"+str(orderline)+"\n"+str(type(orderline)))
+        sale_pool = self.env['sale.order']
+        prod_pool = self.env['product.product']
+        sale_line_pool = self.env['sale.order.line']
+        sale_no = ''
+        sale = {}
+        if customer_id:
+            customer_id = int(customer_id)
+            sale = {'partner_id': customer_id, 
+                    'partner_invoice_id': customer_id,
+                    'partner_shipping_id': customer_id} 
+                    #'signature': sign}
+            _logger.warning("--SaleDiccionario--------------------------" + str(type(sale)))
+            sale_id = sale_pool.create(sale)
+            if sale_id:
+                sale_brw = sale_id
+                sale_brw.onchange_partner_id()
+                #create sale order line
+                for line in orderline:
+                    _logger.warning("--LineaFor--------------------------" + str(line))
+                    _logger.warning("--LineaTypeLine--------------------------" + str(type(line)))
+                    sale_line = {}
+                    # _logger.warning("--LineaGet--------------------------" + str(type(line.get('product_id'))))
+                    #if line.get('product_id'):
+                    #prod_rec = prod_pool.browse(line['product_id'])
+                    prod_rec = orderline.get(2)
+                    if prod_rec:
+                    # orderLine.get
+                        sale_line.update({'name': prod_rec.name or False,
+                                        'product_id': prod_rec.id,
+                                        'product_uom_qty': orderline.get(3),
+                                        'discount':  orderline.get(4),
+                                        'order_id': sale_id.id})
+                        sale_line_id = sale_line_pool.create(sale_line)
+                    for line in sale_line_id:
+                        line.product_id_change()
+        return {"name": sale_brw.name, "id": sale_brw.id } 
 
 
 
