@@ -56,9 +56,9 @@ class revisando_factura_clientes(models.Model):
             # _logger.warning("--idFacturas--------------------------" + str(type(r.invoice_ids)))
 
             facturas = r.invoice_ids
-            listaProductos = []
+            arrayDeDict = []
             # diccionario = {}
-            diccionario = dict()
+            diccionario = {}
             fecha = datetime.strftime(datetime.now(),"%d/%m/%Y %H:%M:%S")
             for t in facturas:
                 _logger.warning("--idFactura--------------------------" + str(t.id))
@@ -73,18 +73,17 @@ class revisando_factura_clientes(models.Model):
                     _logger.warning("--idProducto--------------------------" + str(j.product_id.id))
                     ale = j.rel_field - ((datetime.now() - datetime.strptime(j.create_date, '%Y-%m-%d %H:%M:%S')).days)
                     if (ale<=30):
-                        listaProductos.append(j.product_id.id)
                         diccionario = {1: j.product_id.name,
                                         2: j.product_id,
                                         3: j.quantity,
-                                        4: 0.00,}#line.get('discount'),}
-            self.create_sales_order( diccionario, r.id)
+                                        4: 0.00,}
+                        arrayDeDict.append(diccionario)
+                        
+            self.create_sales_order( arrayDeDict, r.id)
     @api.model
-    def create_sales_order(self, orderline, customer_id):
-        for g in orderline:
-            _logger.warning("--ggggggggg--------------------------"+str(g)+"\n"+str(type(g)))
-        _logger.warning("--Legueeee--------------------------")
-        _logger.warning("--orderLine--------------------------"+str(orderline)+"\n"+str(type(orderline)))
+    def create_sales_order(self, arrayDeDict, customer_id):
+        # _logger.warning("--ArrayDiccionario--------------------------"+str(lineOrder)+"\n"+str(type(lineOrder)))
+        _logger.warning("--ArrayDiccionario--------------------------"+str(arrayDeDict))
         sale_pool = self.env['sale.order']
         prod_pool = self.env['product.product']
         sale_line_pool = self.env['sale.order.line']
@@ -101,22 +100,18 @@ class revisando_factura_clientes(models.Model):
             if sale_id:
                 sale_brw = sale_id
                 sale_brw.onchange_partner_id()
-                #create sale order line
-                for line in orderline:
-                    _logger.warning("--LineaFor--------------------------" + str(line))
-                    _logger.warning("--LineaTypeLine--------------------------" + str(type(line)))
+        for lineOrder in arrayDeDict:
+                    #create sale order line
                     sale_line = {}
-                    # _logger.warning("--LineaGet--------------------------" + str(type(line.get('product_id'))))
-                    #if line.get('product_id'):
-                    #prod_rec = prod_pool.browse(line['product_id'])
-                    prod_rec = orderline.get(2)
+                    
+                    prod_rec = lineOrder.get(2)
                     if prod_rec:
-                    # orderLine.get
-                        sale_line.update({'name': prod_rec.name or False,
+                        sale_line = {'name': prod_rec.name or False,
                                         'product_id': prod_rec.id,
-                                        'product_uom_qty': orderline.get(3),
-                                        'discount':  orderline.get(4),
-                                        'order_id': sale_id.id})
+                                        'product_uom_qty': lineOrder.get(3),
+                                        'discount':  lineOrder.get(4),
+                                        'order_id': sale_id.id}
+                        _logger.warning("--DiccionarioSaleLine--------------------------" + str(sale_line))
                         sale_line_id = sale_line_pool.create(sale_line)
                     for line in sale_line_id:
                         line.product_id_change()
