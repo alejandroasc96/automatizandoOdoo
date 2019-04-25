@@ -44,29 +44,20 @@ class campo_calculado(models.Model):
 class revisando_factura_clientes(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
-
     
     @api.model
     def revisando_factura_clientes(self):
         clientes = self.search([])
-        
-        # _logger.warning("--ArrayClientes--------------------------" + str(clientes))
         for r in clientes:
-            # _logger.warning("--NombreClientes--------------------------" + str(r.name)+ ":" + str((r.invoice_ids)))
-            # _logger.warning("--idFacturas--------------------------" + str(type(r.invoice_ids)))
-
             facturas = r.invoice_ids
+            _logger.warning("--linea--------------------------" + str(facturas))
             arrayDeDict = []
-            # diccionario = {}
             diccionario = {}
             fecha = datetime.strftime(datetime.now(),"%d/%m/%Y %H:%M:%S")
             for t in facturas:
-                _logger.warning("--idFactura--------------------------" + str(t.id))
-                # _logger.warning("--idFactura--------------------------" + str(t.create_date))
-
-                # _logger.warning("--LineasFactura--------------------------" + str(t.invoice_line_ids))
+                _logger.warning("--NombreCliente--------------------------" + str(t.partner_id.name))
                 linea = t.invoice_line_ids
-                _logger.warning("--linea--------------------------" + str(len(linea)))
+                _logger.warning("--linea--------------------------" + str(linea))
                 
                 
                 for j in linea:
@@ -80,9 +71,10 @@ class revisando_factura_clientes(models.Model):
                         arrayDeDict.append(diccionario)
                         
             self.create_sales_order( arrayDeDict, r.id)
+            
+
     @api.model
     def create_sales_order(self, arrayDeDict, customer_id):
-        # _logger.warning("--ArrayDiccionario--------------------------"+str(lineOrder)+"\n"+str(type(lineOrder)))
         _logger.warning("--ArrayDiccionario--------------------------"+str(arrayDeDict))
         sale_pool = self.env['sale.order']
         prod_pool = self.env['product.product']
@@ -101,22 +93,23 @@ class revisando_factura_clientes(models.Model):
                 sale_brw = sale_id
                 sale_brw.onchange_partner_id()
         for lineOrder in arrayDeDict:
-                    #create sale order line
-                    sale_line = {}
-                    
-                    prod_rec = lineOrder.get(2)
-                    if prod_rec:
-                        sale_line = {'name': prod_rec.name or False,
-                                        'product_id': prod_rec.id,
-                                        'product_uom_qty': lineOrder.get(3),
-                                        'discount':  lineOrder.get(4),
-                                        'order_id': sale_id.id}
-                        _logger.warning("--DiccionarioSaleLine--------------------------" + str(sale_line))
-                        sale_line_id = sale_line_pool.create(sale_line)
-                    for line in sale_line_id:
-                        line.product_id_change()
+            #create sale order line
+            sale_line = {}
+            
+            prod_rec = lineOrder.get(2)
+            cantidad = lineOrder.get(3)
+            if prod_rec:
+                sale_line = {'name': prod_rec.name or False,
+                                'product_id': prod_rec.id,
+                                'product_uom_qty': cantidad,
+                                'discount':  lineOrder.get(4),
+                                'order_id': sale_id.id}
+                _logger.warning("--DiccionarioSaleLine--------------------------" + str(sale_line))
+                sale_line_id = sale_line_pool.create(sale_line)
+            # for line in sale_line_id:
+            #     line.product_id_change()
+        send_sale_order = sale_id.force_quotation_send()
         return {"name": sale_brw.name, "id": sale_brw.id } 
-
-
-
+    
+    
 
