@@ -111,5 +111,44 @@ class revisando_factura_clientes(models.Model):
         send_sale_order = sale_id.force_quotation_send()
         return {"name": sale_brw.name, "id": sale_brw.id } 
     
+
+
+class review_quotation(models.Model):
+    _name = 'sale.order'
+    _inherit = 'sale.order'
     
+    @api.model
+    def review_quotation(self):
+        #search quotations how has state = sent (sent quotation)
+        quotation = self.search([('state', 'in', ['sent'])]) 
+
+        for quo in quotation:
+            date = (datetime.now() - datetime.strptime(quo.date_order, '%Y-%m-%d %H:%M:%S')).days
+            _logger.warning("--SentQuotation--------------------------" + str(date))
+            _logger.warning("--SentQuotation--------------------------" + str(quo))
+            # if date == 0:
+            #enviar mensaje a user
+            # send_notification = self.env['mail.thread']
+            # body = '<p>mensaje eeeeeple</p>'
+            # message_type='notification'
+            # content_subtype='html'
+            # partner_id = 1
+            # sent = send_notification.message_post( (body="TEXT", message_type)
+            self.message_post('Hello again!', subtype='mail.mt_comment')
+            partner_ids = self.env['res.partner']
+                # search domain to filter specific partners
+            # ppeeeeey = partner_ids.message_post('Hello again!', subtype='mail.mt_comment',partner_ids=[(1, [partner_ids])])
+            # self.message_post(
+            #     subject=_('Error when trying to generate the invoice'),
+            #     body=_('<h2>%s</h2><hr>%s</hr>' % (
+            #         _('Error when trying to generate the invoice'),
+            #         _('The invoice should have a datetime set.'))))
+            record = self.env['mail.thread']
+            post_vars = {'partner_ids': [(1, 2)],}
+            record.message_post('Hello again!', subtype='mail.mt_comment', **post_vars)
+
+            
+            
+
+
 
