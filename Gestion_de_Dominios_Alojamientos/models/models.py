@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 class DeadLineTime(models.Model):
     _name = 'deadline'
-    months = fields.Integer(string="months of services")
+    months = fields.Integer( string="months of services", store=True)
 
 class serviceInvoiceLine(models.Model):
     _name = 'account.invoice.line'     
@@ -35,7 +35,7 @@ class Service(models.Model):
     _name = 'product.template'
     _inherit = 'product.template'
 
-    dead_line_service = fields.Many2one('deadline', string="Dead Line Service")
+    dead_line_service = fields.Many2one('deadline', string="Caduca en :", store=True)
     
     
 
