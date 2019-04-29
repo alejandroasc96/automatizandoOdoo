@@ -25,7 +25,7 @@
       <field name="inherit_id" ref="product.product_template_form_view"/>
       <field name="arch" type="xml">
         <xpath expr="//page[@name='general_information']/group/group[@name='group_standard_price']">
-          <field name="dead_line_service"/>  
+          <field name="dead_line_service" attrs="{'invisible':[('type', '!=', 'service')]}"/>  
         </xpath>
       </field>
     </record>
@@ -64,9 +64,9 @@
       <field name = "inherit_id" ref="account.invoice_form"/>
       <field name="arch" type="xml">
         <xpath expr="//notebook/page/field/tree" position="inside">
-          <field name="date_to_end"/>
+          <!-- <field name="date_to_end"/>
           <field name="create_date"/>
-          <field name="days_to_end"/>
+          <field name="days_to_end"/> -->
         </xpath>
       </field>
     </record>
@@ -81,6 +81,39 @@
       <field name="view_mode">tree,calendar</field>
     </record>
 
+<!-- Views of schedule action -->
+    <record forcecreate="True" id="revisando_factura_clientes_v1" model="ir.cron">
+      <field name="name">Revision de Suscripciones Vencidas</field>
+      <field eval="True" name="active" />
+      <field name="user_id" ref="base.user_root" />
+      <field name="interval_number">24</field>
+      <field name="interval_type">hours</field>
+      <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 05:00:00')" />
+      <field name="numbercall">-1</field>
+      <field ref="model_res_partner" name="model_id" />
+        <field name="state">code</field>
+      <field name="code">model.revisando_factura_clientes()</field>
+      <field eval="False" name="doall"/>
+      <field name="function">True</field>
+
+    </record>
+
+
+    <record forcecreate="True" id="review_quotation_v1" model="ir.cron">
+      <field name="name">Revision de Presupuestos enviados</field>
+      <field eval="True" name="active" />
+      <field name="user_id" ref="base.user_root" />
+      <field name="interval_number">24</field>
+      <field name="interval_type">hours</field>
+      <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 05:00:00')" />
+      <field name="numbercall">-1</field>
+      <field ref="model_sale_order" name="model_id" />
+        <field name="state">code</field>
+      <field name="code">model.review_quotation()</field>
+      <field eval="False" name="doall"/>
+      <field name="function">True</field>
+
+    </record>
 
     <!-- server action to the one above -->
     <!--
