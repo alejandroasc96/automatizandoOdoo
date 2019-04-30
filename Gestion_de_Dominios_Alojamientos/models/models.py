@@ -17,20 +17,23 @@ class DeadLineTime(models.Model):
 class serviceInvoiceLine(models.Model):
     _name = 'account.invoice.line'     
     _inherit = 'account.invoice.line'
+
     days_to_end = fields.Integer(string='Days To Die', compute="_getDaysToDie", store=False)
     date_to_end = fields.Date(string='Date To Die',compute="_getDateToDie",store=True)
-    @api.one
     @api.depends('create_date')
     def _getDaysToDie(self):
+
         for r in self:
-            r.days_to_end = (datetime.strptime(r.date_to_end, '%Y-%m-%d')-datetime.now()).days + 1
+            if r.product_id.type == 'service':
+                r.days_to_end = (datetime.strptime(r.date_to_end, '%Y-%m-%d')-datetime.now()).days + 1
 
     @api.one
     @api.depends('create_date')
     def _getDateToDie(self):
         for r in self:
-            r.date_to_end = datetime.strptime(
-                r.create_date, '%Y-%m-%d %H:%M:%S') + timedelta((r.product_id.dead_line_service.months/12 * 365)+((r.product_id.dead_line_service.months%12) * 30)) 
+            if r.product_id.type == 'service':
+                r.date_to_end = datetime.strptime(
+                    r.create_date, '%Y-%m-%d %H:%M:%S') + timedelta((r.product_id.dead_line_service.months/12 * 365)+((r.product_id.dead_line_service.months%12) * 30)) 
             
             
 
@@ -61,10 +64,10 @@ class revisando_factura_clientes(models.Model):
                     if t.state == 'paid':
                         linea = t.invoice_line_ids
                         for j in linea:
-                            ale =j.product_id.dead_line_service.months
+                            expirationDate = j.product_id.dead_line_service.months
                             # _logger.warning("----------dead_line_service------------------" + str(ale))
                             # _logger.warning("----------Dias que quedan------------------" + str(ale))
-                            if (ale<=30):
+                            if (expirationDate<=30):
                                 diccionario = {1: j.product_id.name,
                                                 2: j.product_id,
                                                 3: j.quantity,
