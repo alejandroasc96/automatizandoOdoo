@@ -59,13 +59,13 @@ class revisando_factura_clientes(models.Model):
                 _logger.warning("---------FacturasQueTiene-------------------" + str(type(facturas)))
                 arrayDeDict = []
                 diccionario = {}
-                fecha = datetime.strftime(datetime.now(),"%d/%m/%Y %H:%M:%S")
+                # fecha = datetime.strftime(datetime.now(),"%d/%m/%Y %H:%M:%S")
                 for t in facturas:
                     if t.state == 'paid':
                         linea = t.invoice_line_ids
                         for j in linea:
-                            expirationDate = j.product_id.dead_line_service.months
-                            # _logger.warning("----------dead_line_service------------------" + str(ale))
+                            expirationDate = j.product_id.dead_line_service.months # Corregir fallo, no es coger los días establecidos; la diferencia entre fecha.
+                            _logger.warning("----------dead_line_service------------------" + str(expirationDate))
                             # _logger.warning("----------Dias que quedan------------------" + str(ale))
                             if (expirationDate<=30):
                                 diccionario = {1: j.product_id.name,
