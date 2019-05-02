@@ -64,9 +64,9 @@
       <field name = "inherit_id" ref="account.invoice_form"/>
       <field name="arch" type="xml">
         <xpath expr="//notebook/page/field/tree" position="inside">
-          <!-- <field name="date_to_end"/>
+          <field name="date_to_end"/>
           <field name="create_date"/>
-          <field name="days_to_end"/> -->
+          <field name="days_to_end"/>
         </xpath>
       </field>
     </record>
@@ -110,6 +110,23 @@
       <field ref="model_sale_order" name="model_id" />
         <field name="state">code</field>
       <field name="code">model.review_quotation()</field>
+      <field eval="False" name="doall"/>
+      <field name="function">True</field>
+
+    </record>
+
+    <!-- Probando date to end -->
+    <record forcecreate="True" id="date_to_endv1" model="ir.cron">
+      <field name="name">Probando date to end</field>
+      <field eval="True" name="active" />
+      <field name="user_id" ref="base.user_root" />
+      <field name="interval_number">24</field>
+      <field name="interval_type">hours</field>
+      <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 05:00:00')" />
+      <field name="numbercall">-1</field>
+      <field ref="model_account_invoice" name="model_id" />
+        <field name="state">code</field>
+      <field name="code">model.stateListener()</field>
       <field eval="False" name="doall"/>
       <field name="function">True</field>
 

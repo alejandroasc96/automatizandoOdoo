@@ -14,27 +14,46 @@ class DeadLineTime(models.Model):
 
     months = fields.Integer(string="months of services")
 
+class stateListener(models.Model):
+    _name = 'account.invoice'     
+    _inherit = 'account.invoice'
+    
+
+    @api.model
+    @api.multi
+    def invoice_validate(self):
+        for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
+            invoice.message_subscribe([invoice.partner_id.id])
+        self._check_duplicate_supplier_reference()
+
+        # code to calculate when the service from inoice.line will end
+        for line in self.invoice_line_ids:
+            if line.product_id.type == 'service':
+                line.date_to_end = datetime.now(
+                ) + timedelta((line.product_id.dead_line_service.months * 30))
+                pass
+            pass
+
+        return self.write({'state': 'open'})
+
 class serviceInvoiceLine(models.Model):
     _name = 'account.invoice.line'     
     _inherit = 'account.invoice.line'
 
+    date_to_end = fields.Date(string='Date To Die',store=True)
     days_to_end = fields.Integer(string='Days To Die', compute="_getDaysToDie", store=False)
-    date_to_end = fields.Date(string='Date To Die',compute="_getDateToDie",store=True)
+    
+
     @api.depends('create_date')
     def _getDaysToDie(self):
-
-        for r in self:
-            if r.product_id.type == 'service':
-                r.days_to_end = (datetime.strptime(r.date_to_end, '%Y-%m-%d')-datetime.now()).days + 1
-
-    @api.one
-    @api.depends('create_date')
-    def _getDateToDie(self):
-        for r in self:
-            if r.product_id.type == 'service':
-                r.date_to_end = datetime.strptime(
-                    r.create_date, '%Y-%m-%d %H:%M:%S') + timedelta((r.product_id.dead_line_service.months/12 * 365)+((r.product_id.dead_line_service.months%12) * 30)) 
-            
+        for line in self:
+            if line.date_to_end==False:
+                line.days_to_end = 0
+                pass
+            else:
+                line.days_to_end =(datetime.strptime(line.date_to_end, '%Y-%m-%d')-datetime.now()).days + 1
+                pass
+            pass
             
 
 class Service(models.Model):
@@ -61,19 +80,18 @@ class revisando_factura_clientes(models.Model):
                 diccionario = {}
                 # fecha = datetime.strftime(datetime.now(),"%d/%m/%Y %H:%M:%S")
                 for t in facturas:
-                    if t.state == 'paid':
+                    if t.state == 'paid' or t.state == "open":
                         linea = t.invoice_line_ids
                         for j in linea:
-                            expirationDate = j.product_id.dead_line_service.months # Corregir fallo, no es coger los días establecidos; la diferencia entre fecha.
-                            _logger.warning("----------dead_line_service------------------" + str(expirationDate))
-                            # _logger.warning("----------Dias que quedan------------------" + str(ale))
-                            if (expirationDate<=30):
-                                diccionario = {1: j.product_id.name,
-                                                2: j.product_id,
-                                                3: j.quantity,
-                                                4: 0.00,}
-                                arrayDeDict.append(diccionario)
-                                
+                            if j.product_id.type == 'service':
+                                expirationDate = (datetime.now() - datetime.strptime(j.date_to_end, '%Y-%m-%d')).days
+                                if expirationDate <= 30:
+                                    diccionario = {1: j.product_id.name,
+                                                    2: j.product_id,
+                                                    3: j.quantity,
+                                                    4: 0.00,}
+                                    arrayDeDict.append(diccionario)
+                                    
                         self.create_sales_order( arrayDeDict, r.id)
             
 
