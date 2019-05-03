@@ -74,11 +74,8 @@ class revisando_factura_clientes(models.Model):
         for r in clientes:
             if r.invoice_ids:
                 facturas = r.invoice_ids
-                _logger.warning("---------FacturasQueTiene-------------------" + str(facturas))
-                _logger.warning("---------FacturasQueTiene-------------------" + str(type(facturas)))
                 arrayDeDict = []
                 diccionario = {}
-                # fecha = datetime.strftime(datetime.now(),"%d/%m/%Y %H:%M:%S")
                 for t in facturas:
                     if t.state == 'paid' or t.state == "open":
                         linea = t.invoice_line_ids
@@ -100,17 +97,16 @@ class revisando_factura_clientes(models.Model):
         sale_pool = self.env['sale.order']
         prod_pool = self.env['product.product']
         sale_line_pool = self.env['sale.order.line']
-        sale_no = ''
         sale = {}
+        # create new order
         if customer_id:
-            customer_id = int(customer_id)
             sale = {'partner_id': customer_id, 
                     'partner_invoice_id': customer_id,
                     'partner_shipping_id': customer_id}
             sale_id = sale_pool.create(sale)
+            # if new order exist we will create the new orders line
             if sale_id:
-                sale_brw = sale_id
-                sale_brw.onchange_partner_id()
+                sale_id.onchange_partner_id()
         for lineOrder in arrayDeDict:
             #create sale order line
             sale_line = {}
@@ -124,7 +120,7 @@ class revisando_factura_clientes(models.Model):
                                 'order_id': sale_id.id}
                 sale_line_id = sale_line_pool.create(sale_line)
         send_sale_order = sale_id.force_quotation_send()
-        return {"name": sale_brw.name, "id": sale_brw.id } 
+        return {"name": sale_id.name, "id": sale_id.id } 
     
 
 
@@ -142,7 +138,22 @@ class review_quotation(models.Model):
             _logger.warning("--SentQuotation--------------------------" + str(date))
             _logger.warning("--SentQuotation--------------------------" + str(quo))
             #enviar mensaje a user
-            ale = self.env['mail.thread']
-            ale.message_post(body='<p>hola</p>', partner_ids=[1, 6])
+            # ale = self.env['mail.thread']
+            # ale.message_post(body='<p>hola</p>', partner_ids=[1, 6])
+        # ---------  Funciona pero no veo los cambios que ejecuta ------------------
+        recipient_ids = [1, 2, 3]
+        recipient_links = [(4, channel_id) for channel_id in recipient_ids]
+        model_data_obj = self.pool.get('ir.model.data')
+        ref = model_data_obj.get_object_reference(cr, uid, 'mail', 'mt_comment')
+        message_data = {
+        'type': 'notification',
+        'subject': "Product request",
+        'body': 'holaaa',
+        'channel_ids': recipient_links,
+        'message_type': notification,
+        }
+        msg_obj = self.pool.get('mail.message')
+        msg_obj.create(cr, uid, message_data)
+        # ----------- ------------------------
 
 
