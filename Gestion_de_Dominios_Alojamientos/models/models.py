@@ -124,36 +124,66 @@ class revisando_factura_clientes(models.Model):
     
 
 
+# class _review_quotation(models.Model):
+#     _name = 'sale.order'
+#     _inherit = 'sale.order'
+    
+#     @api.model
+#     def _review_quotation(self):
+#         # #search quotations how has state = sent (sent quotation)
+#         # quotation = self.search([('state', 'in', ['sent'])]) 
+        
+#         # for quo in quotation:
+#         #     date = (datetime.now() - datetime.strptime(quo.date_order, '%Y-%m-%d %H:%M:%S')).days
+#         #     _logger.warning("----------------------------" + str(date))
+#         #     if date <=30:
+                
+#         #         self._postDeniedOrder({"quotation_id" : quo.id, "partner_id": quo.partner_id})
+# #enviar mensaje a Channel
+#     @api.model
+#     def _postDeniedOrder(self, order):
+        
+#         channels = self.env['mail.channel'].search([])
+#         for channel in channels:
+#             if channel.name == "Denied Orders":
+#                 _logger.warning("----------------------------" + str(order.get("quotation_id")))
+#                 channel.message_post(subject="order denied",body="Factura : " + str(order.get("quotation_id")) + " Cliente :" + str(order.get("partner_id") , subtype="mail.mt_comment")
+                
+#                 pass
+
+# class _review_quotation(models.Model):
+#     _name= 'sale.order'
+#     _inherit = 'sale.order'
+
+#     @api.model
+#     def _review_quotation(self):
+
 class review_quotation(models.Model):
     _name = 'sale.order'
     _inherit = 'sale.order'
-    
+
     @api.model
     def review_quotation(self):
-        #search quotations how has state = sent (sent quotation)
-        quotation = self.search([('state', 'in', ['sent'])]) 
-
+        _logger.warning("-------------------------Golxoskdods---")
+        quotation = self.search([('state', 'in', ['sent'])])
         for quo in quotation:
             date = (datetime.now() - datetime.strptime(quo.date_order, '%Y-%m-%d %H:%M:%S')).days
-            _logger.warning("--SentQuotation--------------------------" + str(date))
-            _logger.warning("--SentQuotation--------------------------" + str(quo))
-            #enviar mensaje a user
-            # ale = self.env['mail.thread']
-            # ale.message_post(body='<p>hola</p>', partner_ids=[1, 6])
-        # ---------  Funciona pero no veo los cambios que ejecuta ------------------
-        recipient_ids = [1, 2, 3]
-        recipient_links = [(4, channel_id) for channel_id in recipient_ids]
-        model_data_obj = self.pool.get('ir.model.data')
-        ref = model_data_obj.get_object_reference(cr, uid, 'mail', 'mt_comment')
-        message_data = {
-        'type': 'notification',
-        'subject': "Product request",
-        'body': 'holaaa',
-        'channel_ids': recipient_links,
-        'message_type': notification,
-        }
-        msg_obj = self.pool.get('mail.message')
-        msg_obj.create(cr, uid, message_data)
-        # ----------- ------------------------
+            _logger.warning("----------------------------" + str(date))
+            if date <=30:
+                
+                self._postDeniedOrder({"quotation_id" : quo.id, "partner_id": quo.partner_id.name})
+
+#enviar mensaje a Channel
+    @api.model
+    def _postDeniedOrder(self, order):
+        
+        channels = self.env['mail.channel'].search([])
+        for channel in channels:
+            if channel.name == "Denied Orders":
+                _logger.warning("----------------------------" + str(order.get("quotation_id")))
+                body = "Factura : " + str(order.get("quotation_id")) + " Cliente :" + str(order.get("partner_id"))
+                channel.message_post(subject="order denied", body= body , subtype="mail.mt_comment")
+                
+
 
 

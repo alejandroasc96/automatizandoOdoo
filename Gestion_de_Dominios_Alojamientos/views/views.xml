@@ -51,7 +51,9 @@
       <field name="model">account.invoice.line</field>
       <field name="arch" type="xml">
         <calendar string="date_to_end" date_start="date_to_end">
-          <field name="days_to_end"/>
+          <field name="invoice_id"/>
+          <field name="partner_id"/>
+          <field name="product_id"/>
         </calendar>
       </field>
     </record>
