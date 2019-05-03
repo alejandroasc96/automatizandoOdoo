@@ -94,7 +94,7 @@ class revisando_factura_clientes(models.Model):
                                                     4: 0.00,}
                                     arrayDeDict.append(diccionario)
                                     
-                        self.create_sales_order( arrayDeDict, r.id)
+                self.create_sales_order( arrayDeDict, r.id)
             
 
     @api.model
