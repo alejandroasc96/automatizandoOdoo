@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,date
+from dateutil.relativedelta import relativedelta
+
 
 import logging
 
@@ -22,6 +24,7 @@ class stateListener(models.Model):
     @api.model
     @api.multi
     def invoice_validate(self):
+
         for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
             invoice.message_subscribe([invoice.partner_id.id])
         self._check_duplicate_supplier_reference()
@@ -29,8 +32,10 @@ class stateListener(models.Model):
         # code to calculate when the service from inoice.line will end
         for line in self.invoice_line_ids:
             if line.product_id.type == 'service':
-                line.date_to_end = datetime.now(
-                ) + timedelta((line.product_id.dead_line_service.months * 30))
+                #Para calcular la fecha en la que caduca el servicio usamos el método relativedelta que nos va añadiendo
+                #el número de meses que están estipulados.
+                line.date_to_end = datetime.now() + relativedelta(months=line.product_id.dead_line_service.months)
+                _logger.warning("----------------------------" + str(line.date_to_end))
                 pass
             pass
 
@@ -81,7 +86,7 @@ class revisando_factura_clientes(models.Model):
                         linea = t.invoice_line_ids
                         for j in linea:
                             if j.product_id.type == 'service':
-                                expirationDate = (datetime.now() - datetime.strptime(j.date_to_end, '%Y-%m-%d')).days
+                                expirationDate = j.days_to_end
                                 if expirationDate <= 30:
                                     diccionario = {1: j.product_id.name,
                                                     2: j.product_id,

@@ -25,7 +25,7 @@
       <field name="inherit_id" ref="product.product_template_form_view"/>
       <field name="arch" type="xml">
         <xpath expr="//page[@name='general_information']/group/group[@name='group_standard_price']">
-          <field name="dead_line_service" attrs="{'invisible':[('type', '!=', 'service')]}"/>  
+          <field name="dead_line_service" attrs="{'invisible':[('type', '!=', 'service')]}" context="{'order_display': 'name desc' }"/>  
         </xpath>
       </field>
     </record>
