@@ -117,21 +117,11 @@
 
     </record>
 
-    <!-- Probando date to end -->
-    <record forcecreate="True" id="date_to_endv1" model="ir.cron">
-      <field name="name">Probando date to end</field>
-      <field eval="True" name="active" />
-      <field name="user_id" ref="base.user_root" />
-      <field name="interval_number">24</field>
-      <field name="interval_type">hours</field>
-      <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 05:00:00')" />
-      <field name="numbercall">-1</field>
-      <field ref="model_account_invoice" name="model_id" />
-        <field name="state">code</field>
-      <field name="code">model.stateListener()</field>
-      <field eval="False" name="doall"/>
-      <field name="function">True</field>
-
+  <!-- View of Channel Denied order -->
+  <record model="mail.channel" id="channel_sb_1">
+      <field name="name">Denied Orders</field>
+      <field name="public">public</field>
+      <field name="description">Medical refill information details.</field>
     </record>
 
     <!-- server action to the one above -->
