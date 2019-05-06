@@ -30,7 +30,9 @@
         # 'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
-    ],
+        'reports/book_loan_report.xml',
+        'reports/book_loan_report_template.xml',
+        ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
