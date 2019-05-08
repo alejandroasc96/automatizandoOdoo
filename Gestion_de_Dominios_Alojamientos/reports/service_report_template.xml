@@ -36,10 +36,12 @@
                     <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
                 </t>
             </head>
-            <body class="container">
-                <div id="wrapwrap">
+            <body class="container" style="border: 2px solid green">
+                <div id="wrapwrap" style="border: 2px solid black">
                     <main>
-                        <t t-raw="0"/>
+                        <div>
+                            <t t-raw="0"/>
+                        </div>
                     </main>
                 </div>
             </body>
@@ -57,41 +59,47 @@
     </template>
 
     <template id="inventia_layout">
-        <div class="article" style="border: 10px solid red">
-            <div class="row mb8">
+        <div class="header" style="border-top: 20px solid #73cc00;border-left: 20px solid #73cc00;border-right: 20px solid #73cc00;" >
+            <div class="row" style="margin-left: 50px;margin-right: 50px;margin-top:5px">
                 <div class="col-xs-6">
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" style="heigh"/>
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" style="max-width: 230px; max-height: 130px;"/>
                 </div>
-                <div class="col-xs-6 text-right mb4">
-                    <h4 class="mt0" t-field="company.report_header"/>
-                    <div name="company_address" class="mb4">
-                        <span class="company_address" t-field="company.partner_id" t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
-                    </div>
-                </div>
+                <div class="col-xs-5 col-xs-offset-1" name="company_address" >
+                    <h2>
+                        <t t-if="not (env.context.get('proforma', False) or is_pro_forma)" >
+                            <span t-if="doc.state not in ['draft','sent']">Pedido</span>
+                            <span t-if="doc.state in ['draft','sent']">Presupuesto</span>
+                        </t>
+                        <t t-if="env.context.get('proforma', False) or is_pro_forma">
+                            <span>Pro-Forma Invoice # </span>
+                        </t>
+                        <h4 style="margin-left: 48px">Nº <span t-field="doc.name"/></h4>
+                    </h2>
+                </div>   
             </div>
-            <t t-raw="0" />
-            <div class="text-center">
-                <div class="col-sm-4" style="text-align: center">
-                    <h1 style="text-align: left end;color:#3d4d5a;"> Gracias <em style="color:#73cc00">^__^</em>
-                </h1>
+        </div>
+    
+        <div class="article" style="border-left: 20px solid #73cc00;border-right: 20px solid #73cc00;">
+            <div style="margin-left: 50px;margin-right: 50px;height: 1010px">
+                <p style="color:#3d4d5a;transform: rotate(90deg);transform-origin: top left;float:left; margin-left: -2.9%;padding:0 5px;">Inscrita en el Registro Mercantil de Las Palmas, hoja GC-30.775 e inscripción 1º, del Tomo 1662 General,Folio 97</p>
+                <t t-raw="0" />
             </div>
-            <div class="col-sm-4" style="border-left: 2px solid #73cc00;">
-                <h4 style="text-align: left end;"> Inventia Plus S.L.</h4>
-                <p>B35767417</p>
-            </div>
-            <div class="col-sm-4" style="border-left: 2px solid #73cc00;">
+            
+        </div>
 
-                <div class="row">
-                    <p style="line-height: 95%; text-align: left;">
-                        <h4 style="margin-left: 1%; margin-right: 3% ">contacto</h4>
-                        info@inventiaplus.com <br/>
-                        +34 928 702 054 <br/>
-                        C/ Delineante, 22, 2º planta, Ofic. 8 <br/>
-                        35219,
-                        Pol. Ind. Salinetas Telde
-                    </p>
+        <div class="footer" style="border-bottom: 20px solid #73cc00;border-left: 20px solid #73cc00;border-right: 20px solid #73cc00;">
+            <div class="row mt8">
+                <div class="col-xs-4" style="text-align: center">
+                    <h1 style="text-align: left end;color:#3d4d5a;"> Gracias <em style="color:#73cc00">^__^</em></h1>
                 </div>
-            </div>
+                <div class="col-xs-4 mb4" style="height:100px;border-left: 2px solid #73cc00;">
+                    <h4 style="text-align: left end;"> INVENTIA PLUS S.L.</h4>
+                    <p>B35767417</p>
+                </div>
+                <div class="col-xs-4 mb4" style="border-left: 2px solid #73cc00;">
+                    <p><strong>contacto </strong>info@inventiaplus.com</p>
+                    <p style="tex-align:right">+34 928 702 054<br/>C/ Delineante, 22, 2º planta, Ofic. 8 <br/>35219,Pol. Ind. Salinetas Telde</p>
+                </div>
             </div>
         </div>
 
@@ -120,71 +128,22 @@
         <t t-call="Gestion_de_Dominios_Alojamientos.external_layout">
             <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
             <div class="page">
+                
                 <div class="oe_structure"/>
-                <div class="row">
+                <div class="row mt32 mb32" id="informations" >
                     <div class="col-xs-6">
-                        <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
-                                and doc.partner_invoice_id != doc.partner_id
-                                or doc.partner_shipping_id != doc.partner_invoice_id">
-                            <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and shipping address:</strong>
-                            <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing address:</strong>
-                            <div t-field="doc.partner_invoice_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                            <div t-if="doc.partner_shipping_id != doc.partner_invoice_id" class="mt8">
-                                <strong>Shipping address:</strong>
-                                <div t-field="doc.partner_shipping_id"
-                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                            </div>
-                        </t>
+                        <strong>ATT.</strong>
+                        <div t-field="doc.partner_id" t-options='{"widget": "contact", "fields": ["address", "name","email"], "no_marker": True}' />
                     </div>
-                    <div class="col-xs-5 col-xs-offset-1">
-                        <div t-field="doc.partner_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                        <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="doc.partner_id.vat"/></p>
-                    </div>
-                </div>
-
-                <h2>
-                    <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
-                        <span t-if="doc.state not in ['draft','sent']">Order # </span>
-                        <span t-if="doc.state in ['draft','sent']">Quotation # </span>
-                    </t>
-                    <t t-if="env.context.get('proforma', False) or is_pro_forma">
-                        <span>Pro-Forma Invoice # </span>
-                    </t>
-                    <span t-field="doc.name"/>
-                </h2>
-
-                <div class="row mt32 mb32" id="informations">
-                    <div t-if="doc.client_order_ref" class="col-xs-3">
-                        <strong>Your Reference:</strong>
-                        <p t-field="doc.client_order_ref"/>
-                    </div>
-                    <div t-if="doc.confirmation_date and doc.state not in ['draft','sent']" class="col-xs-3">
-                        <strong>Date Ordered:</strong>
-                        <p t-field="doc.confirmation_date"/>
-                    </div>
-                    <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-xs-3">
-                        <strong>Quotation Date:</strong>
+                    <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-xs-6">
+                        <strong>Fecha:</strong>
                         <p t-field="doc.date_order"/>
                     </div>
-                    <div t-if="doc.user_id.name" class="col-xs-3">
-                        <strong>Salesperson:</strong>
-                        <p t-field="doc.user_id"/>
-                    </div>
-                    <div name="payment_term" t-if="doc.payment_term_id" class="col-xs-3">
-                        <strong>Payment Terms:</strong>
-                        <p t-field="doc.payment_term_id"/>
-                    </div>
-                    <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-xs-3">
-                        <strong>Expiration Date:</strong>
-                        <p t-field="doc.validity_date"/>
-                    </div>
                 </div>
 
-                <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
+                <!-- <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/> -->
 
-                <t t-foreach="doc.order_lines_layouted()" t-as="page">
+                <t t-foreach="doc.order_lines_layouted()" t-as="page" >
                     <table class="table table-condensed">
                         <thead>
                             <tr>
@@ -208,7 +167,7 @@
                                     </tr>
                                 </t>
 
-                                <t t-foreach="layout_category['lines']" t-as="l">
+                                <t t-foreach="layout_category['lines']" t-as="l" style="color:grey">
                                     <tr>
                                         <td><span t-field="l.name"/></td>
                                         <td class="text-right">
