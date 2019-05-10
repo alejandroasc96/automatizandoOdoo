@@ -7,6 +7,14 @@
             <t t-raw="0"/>
         </t>
     </template>
+
+    <!-- <template id="assets_common" name="lato_font" inherit_id="web.assets_common">
+
+        <xpath expr="." position="inside">
+
+        </xpath>
+    
+    </template> -->
     
     <template id="report_layout" name="Report layout">&lt;!DOCTYPE html&gt;
         <html t-att-lang="lang and lang.replace('_', '-')" t-att-data-editable="'1' if editable else None" t-att-data-translatable="'1' if translatable else None" t-att-data-edit_translations="'1' if edit_translations else None" t-att-data-main-object="repr(main_object) if editable else None" t-att-data-report-margin-top="data_report_margin_top" t-att-data-report-header-spacing="data_report_header_spacing" t-att-data-report-dpi="data_report_dpi" t-att-web-base-url="web_base_url">
@@ -35,9 +43,10 @@
                     <script type="text/javascript" src="/web_editor/static/src/js/iframe.js"></script>
                     <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
                 </t>
+                
             </head>
-            <body class="container" style="border: 2px solid green">
-                <div id="wrapwrap" style="border: 2px solid black">
+            <body class="container">
+                <div id="wrapwrap">
                     <main>
                         <div>
                             <t t-raw="0"/>
@@ -52,42 +61,40 @@
        <t t-name="sale.report_saleorder">
             <t t-call="Gestion_de_Dominios_Alojamientos.html_container">
                 <t t-foreach="docs" t-as="doc">
-                        <t t-call="Gestion_de_Dominios_Alojamientos.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+                    <t t-call="Gestion_de_Dominios_Alojamientos.report_saleorder_document" t-lang="doc.partner_id.lang"/>
                 </t>
             </t>
         </t>
     </template>
 
     <template id="inventia_layout">
-        <div class="header" style="border-top: 20px solid #73cc00;border-left: 20px solid #73cc00;border-right: 20px solid #73cc00;" >
-            <div class="row" style="margin-left: 50px;margin-right: 50px;margin-top:5px">
-                <div class="col-xs-6">
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" style="max-width: 230px; max-height: 130px;"/>
+        <div class="header" style="margin-bottom:50px;margin-left:-15px;margin-right:-15px; border-top: 35px solid green;border-right: 35px solid green;border-left: 35px solid green">
+            <div class="row" >
+                <div class="col-xs-8">
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" style="max-width: 280px; max-height: 180px;"/>
                 </div>
-                <div class="col-xs-5 col-xs-offset-1" name="company_address" >
-                    <h2>
-                        <t t-if="not (env.context.get('proforma', False) or is_pro_forma)" >
-                            <span t-if="doc.state not in ['draft','sent']">Pedido</span>
-                            <span t-if="doc.state in ['draft','sent']">Presupuesto</span>
-                        </t>
-                        <t t-if="env.context.get('proforma', False) or is_pro_forma">
-                            <span>Pro-Forma Invoice # </span>
-                        </t>
-                        <h4 style="margin-left: 48px">Nº <span t-field="doc.name"/></h4>
-                    </h2>
-                </div>   
+                <div class="col-xs-4" style="margin-top:60px;align-self: left;">
+            
+                    <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+                        <h2 style="align-self: left;font-family: 'Lato', sans-serif;" t-if="doc.state not in ['draft','sent']">Pedido</h2>
+                        <h2 style="align-self: left;font-weight: bold;font-family: 'Lato', sans-serif;" t-if="doc.state in ['draft','sent']">Presupuesto</h2>
+                    </t>
+                    <h3 style="align-self: left;margin-left: 27px;font-weight: bold;size:50;font-family: 'Lato', sans-serif;" t-field="doc.name"></h3>
+                    <h4 style="align-self: left;margin-left: 1px;size:30;font-family: 'Lato', sans-serif;" t-field="doc.date_order"></h4>
+                    
+                </div>  
+                 
             </div>
         </div>
-    
-        <div class="article" style="border-left: 20px solid #73cc00;border-right: 20px solid #73cc00;">
-            <div style="margin-left: 50px;margin-right: 50px;height: 1010px">
-                <p style="color:#3d4d5a;transform: rotate(90deg);transform-origin: top left;float:left; margin-left: -2.9%;padding:0 5px;">Inscrita en el Registro Mercantil de Las Palmas, hoja GC-30.775 e inscripción 1º, del Tomo 1662 General,Folio 97</p>
+        
+        <div class="article o_report_layout_background" style="height:926px;margin-left:-15px;margin-right:-15px; border-right: 35px solid green;border-left: 35px solid green">
+            <div class="row mt8" style="margin-top:50px;">
                 <t t-raw="0" />
             </div>
             
         </div>
 
-        <div class="footer" style="border-bottom: 20px solid #73cc00;border-left: 20px solid #73cc00;border-right: 20px solid #73cc00;">
+        <div class="footer" style="margin-left:-15px;margin-right:-15px;border-bottom: 35px solid green;border-right: 35px solid green;border-left: 35px solid green">
             <div class="row mt8">
                 <div class="col-xs-4" style="text-align: center">
                     <h1 style="text-align: left end;color:#3d4d5a;"> Gracias <em style="color:#73cc00">^__^</em></h1>
@@ -100,6 +107,9 @@
                     <p><strong>contacto </strong>info@inventiaplus.com</p>
                     <p style="tex-align:right">+34 928 702 054<br/>C/ Delineante, 22, 2º planta, Ofic. 8 <br/>35219,Pol. Ind. Salinetas Telde</p>
                 </div>
+            </div>
+            <div class="row">
+                <p style="color:#3d4d5a; writing-mode: vertical-lr;transform: rotate(180deg);">Inscrita en el Registro Mercantil de Las Palmas, hoja GC-30.775 e inscripción 1º, del Tomo 1662 General,Folio 97</p>
             </div>
         </div>
 
@@ -127,26 +137,25 @@
     <template id="report_saleorder_document">
         <t t-call="Gestion_de_Dominios_Alojamientos.external_layout">
             <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
-            <div class="page">
-                
+            <div class="page" style="margin-top:50px;margin-left:50px;margin-right:50px">
+                <style>
+                    @import url('https://fonts.googleapis.com/css?family=Lato');
+                </style> 
                 <div class="oe_structure"/>
                 <div class="row mt32 mb32" id="informations" >
                     <div class="col-xs-6">
                         <strong>ATT.</strong>
                         <div t-field="doc.partner_id" t-options='{"widget": "contact", "fields": ["address", "name","email"], "no_marker": True}' />
                     </div>
-                    <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-xs-6">
-                        <strong>Fecha:</strong>
-                        <p t-field="doc.date_order"/>
-                    </div>
+                    
                 </div>
 
                 <!-- <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/> -->
 
                 <t t-foreach="doc.order_lines_layouted()" t-as="page" >
-                    <table class="table table-condensed">
+                    <table class="table table-condensed" style="border-bottom:2px solid black">
                         <thead>
-                            <tr>
+                            <tr style="border-bottom:2px solid black">
                                 <th>Description</th>
                                 <th class="text-right">Quantity</th>
                                 <th class="text-right">Unit Price</th>
@@ -167,7 +176,7 @@
                                     </tr>
                                 </t>
 
-                                <t t-foreach="layout_category['lines']" t-as="l" style="color:grey">
+                                <t t-foreach="layout_category['lines']" t-as="l" style="color:grey; border-bottom:2px solid black">
                                     <tr>
                                         <td><span t-field="l.name"/></td>
                                         <td class="text-right">
@@ -195,7 +204,7 @@
                                 </t>
 
                                 <t t-if="(layout_category_size > 1 or page_size > 1) and layout_category['subtotal']" groups="sale.group_sale_layout">
-                                    <tr class="text-right">
+                                    <tr class="text-right" style="border-bottom:2px solid grey">
                                         <td colspan="6">
                                             <strong>Subtotal: </strong>
                                             <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
