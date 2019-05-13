@@ -36,7 +36,7 @@ class stateListener(models.Model):
                 #el número de meses que están estipulados.
                 line.date_to_end = datetime.now() + relativedelta(months=line.product_id.dead_line_service.months)
                 _logger.warning("----------------------------" + str(line.date_to_end))
-                line.only_date = datetime.strptime(line.date_to_end, '%Y-%m-%d')-datetime.now()
+                # line.only_date = datetime.strptime(line.date_to_end, '%Y-%m-%d')-datetime.now()
                 pass
             pass
 
@@ -47,7 +47,7 @@ class serviceInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     date_to_end = fields.Date(string='Date To Die',store=True)
-    only_date = fields.Date(string='Date',store=True)
+    # only_date = fields.Date(string='Date',store=True)
     days_to_end = fields.Integer(string='Days To Die', compute="_getDaysToDie", store=False)
     
 
@@ -97,40 +97,7 @@ class revisando_factura_clientes(models.Model):
                                     arrayDeDict.append(diccionario)
                                     
                 self.create_sales_order( arrayDeDict, r.id)
-            
 
-    # @api.model
-    # def create_sales_order(self, arrayDeDict, customer_id):
-    #     sale_pool = self.env['sale.order']
-    #     prod_pool = self.env['product.product']
-    #     sale_line_pool = self.env['sale.order.line']
-    #     sale = {}
-    #     # create new order
-    #     if customer_id:
-    #         sale = {'partner_id': customer_id, 
-    #                 'partner_invoice_id': customer_id,
-    #                 'partner_shipping_id': customer_id}
-    #         sale_id = sale_pool.create(sale)
-    #         # if new order exist we will create the new orders line
-    #         if sale_id:
-    #             sale_id.onchange_partner_id()
-    #     for lineOrder in arrayDeDict:
-    #         #create sale order line
-    #         sale_line = {}
-    #         prod_rec = lineOrder.get(2)
-    #         cantidad = lineOrder.get(3)
-    #         if prod_rec:
-    #             sale_line = {'name': prod_rec.name or False,
-    #                             'product_id': prod_rec.id,
-    #                             'product_uom_qty': cantidad,
-    #                             'discount':  lineOrder.get(4),
-    #                             'order_id': sale_id.id}
-    #             sale_line_id = sale_line_pool.create(sale_line)
-    #     send_sale_order = sale_id.force_quotation_send()
-    #     return {"name": sale_id.name, "id": sale_id.id }
-
-    
-    # Método a usar futuro
     @api.model
     def create_sales_order(self, linesOrder, customer_id):
         sale_pool = self.env['sale.order']
@@ -160,7 +127,6 @@ class revisando_factura_clientes(models.Model):
                             'order_id': sale_id.id}
                 sale_line_id = sale_line_pool.create(sale_line)
         # añadiendo el attachment
-        # self.action_generate_attachment()
         email_act = sale_id.action_quotation_send()
         if email_act and email_act.get('context'):
             email_ctx = email_act['context']
@@ -168,31 +134,6 @@ class revisando_factura_clientes(models.Model):
             sale_id.with_context(email_ctx).message_post_with_template(
                 email_ctx.get('default_template_id'))
             pass
-    
-    # Método que crear el attachment
-    # @api.model
-    # @api.multi
-    # def action_generate_attachment(self):
-    #     """ this method called from button action in view xml """
-    #     _logger.warning("---------- DENTRO DEL MÉTODO DE ATTACHMENT------------------" )
-    #     # generate pdf from report, use report's id as reference
-    #     REPORT_ID = 'some_report_id'
-    #     pdf = self.env.ref(REPORT_ID).render_qweb_pdf(self.ids)
-    #     # pdf result is a list
-    #     b64_pdf = base64.b64encode(pdf[0])
-
-    #     # save pdf as attachment
-    #     ATTACHMENT_NAME = "My Attachment Name"
-    #     return self.env['ir.attachment'].create({
-    #         'name': ATTACHMENT_NAME,
-    #         'type': 'binary',
-    #         'datas': b64_pdf,
-    #         'datas_fname': ATTACHMENT_NAME + '.pdf',
-    #         'store_fname': ATTACHMENT_NAME,
-    #         'res_model': self._name,
-    #         'res_id': self.id,
-    #         'mimetype': 'application/x-pdf'
-    #     })
 
 
 class review_quotation(models.Model):
@@ -221,31 +162,4 @@ class review_quotation(models.Model):
                 channel.message_post(subject="order denied", body= body , subtype="mail.mt_comment")
                 
 
-# Prueba generando el attachment 
-# class SomeModel(models.Model):
-#     _name = 'some.model'
-#     field1 = fields.Char(string="Field 1")
-#     field2 = fields.Boolean(string="Field 2")
-
-#     @api.multi
-#     def action_generate_attachment(self):
-#         """ this method called from button action in view xml """
-#         # generate pdf from report, use report's id as reference
-#         REPORT_ID = 'some_report_id'
-#         pdf = self.env.ref(REPORT_ID).render_qweb_pdf(self.ids)
-#         # pdf result is a list
-#         b64_pdf = base64.b64encode(pdf[0])
-
-#         # save pdf as attachment
-#         ATTACHMENT_NAME = "My Attachment Name"
-#         return self.env['ir.attachment'].create({
-#             'name': ATTACHMENT_NAME,
-#             'type': 'binary',
-#             'datas': b64_pdf,
-#             'datas_fname': ATTACHMENT_NAME + '.pdf',
-#             'store_fname': ATTACHMENT_NAME,
-#             'res_model': self._name,
-#             'res_id': self.id,
-#             'mimetype': 'application/x-pdf'
-#         })
 

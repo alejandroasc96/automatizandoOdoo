@@ -13,7 +13,7 @@
             - Generación de la correspondiente factura cuando corresponda en caso de aprobación del presupuesto.
     """,
 
-    'author': "Alejandro y Bryan",
+    'author': "Alejandro and Bryan",
     'website': "http://afar.x10host.com/2dam-t-18-19/inventia/p2-2.html",
 
     # Categories can be used to filter modules in modules listing
@@ -23,22 +23,19 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'product', 'account', 'mail', 'sale', 'web', 'website'],
+    'depends': ['base', 'product', 'account', 'mail', 'sale', 'web'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
-        # 'views/report_without_prices.xml',
-        # 'views/account_report.xml',
         'reports/service_report.xml',
         'reports/service_report_template.xml',
-        ],
+    ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
-    
     'application': 'True',
 }

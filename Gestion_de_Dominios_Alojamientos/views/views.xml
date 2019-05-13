@@ -1,23 +1,22 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-    <!-- <record id="example_email_template" model="mail.template">
-      <field name="name">Example e-mail template</field>
-      <field name="email_from">${object.company_id and object.company_id.email or ''}</field>
-      <field name="subject">Congratz ${object.name}</field>
-      <field name="email_to">${object.email|safe}</field>
-      <field name="lang">${object.lang}</field>
-      <field name="model_id" ref="base.model_res_partner"/>
-      <field name="auto_delete" eval="True"/>
-      <field name="body_html">
-        <![CDATA[
-            <p>Dear ${(object.name)},<br/><br/>
-            Good job, you've just created your first e-mail template!<br/></p>
-                  Regards,<br/>
-                  ${(object.company_id.name)}
-          ]]>
-      </field>
-    </record> -->
+    
+    <record id="InventiaPlusPaper" model="report.paperformat">
+      <field name="name">InventiaPlusPaper</field>
+      <field name="default" eval="True" />
+      <field name="format">A4</field>
+      <field name="page_height">0</field>
+      <field name="page_width">0</field>
+      <field name="orientation">Portrait</field>
+      <field name="margin_top">55</field>
+      <field name="margin_bottom">27</field>
+      <field name="margin_left">0</field>
+      <field name="margin_right">0</field>
+      <field name="header_line" eval="False" />
+      <field name="header_spacing">60</field>
+      <field name="dpi">90</field>
+    </record>
 
     <record model="ir.ui.view" id="Gestion_de_Dominios_Alojamientos.form">
       <field name="name">Gestion_de_Dominios_Alojamientos_form</field>
