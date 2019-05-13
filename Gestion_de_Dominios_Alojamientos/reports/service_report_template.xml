@@ -87,11 +87,9 @@
         </div>
         <!-- height:926px; style="height:100%;margin-left:-15px;margin-right:-15px;"-->
         <div class="article" >
-            <div class="row mt8" style="margin-top:50px;margin-bottom:50px">
                 <t t-raw="0" />
-            </div>
-            
         </div>
+
 <!-- style="margin-left:-15px;margin-right:-15px;" -->
         <div class="footer" style="margin-top:15px">
             <div class="row mt8">
@@ -145,7 +143,7 @@
     <template id="report_saleorder_document">
         <t t-call="Gestion_de_Dominios_Alojamientos.external_layout">
             <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
-            <div class="page" style="margin-top:50px;margin-left:50px;margin-right:50px">
+            <div class="page" style="margin-top:50px;margin-bottom:5px;margin-left:50px;margin-right:50px">
                 <style>
                     @import url('https://fonts.googleapis.com/css?family=Lato');
                 </style> 
@@ -275,6 +273,38 @@
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="row" style="margin-top=5px">
+                    <div class="col-xs-6">
+                        <p>
+                            <strong>Términos y condiciones:</strong> <br/>
+                            Este presupusto tiene una validez de 3 meses. <br/>
+                            Una vez aceptado, devolverlo firmado y sellado.
+                        </p>
+                    </div>
+                    <div class="col-xs-6" style="border-left: 2px solid #73cc00;">
+                        <p>
+                            <strong>Firma y sello:</strong> <br/><br/>
+                            <strong>Nombre:</strong>______________________                        
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <p style="margin-top:20px;margin-left:15px;margin-right:15px;text-align:justify">
+                        El responsable del tratamiento de sus datos es INVENTIA PLUS S.L..Sus datos serán
+                        tratados con la finalidad de gestionar los servicios administrativos y facturar
+                        nuestros servicios. La legitimación para el uso de sus datos está basada en la 
+                        ejecución de un contrato o presentación de servicios. No se cederán datos a trceros, salvo 
+                        obligación legal. Los datos serán destruidos una vez comuníque su baja y/o finalizados los períodos
+                        legales de conservación. No se llevarán a cabo transferencias internacionales de datos ni análisis deperfiles.
+                         / Los interesados podrán ejercitar sus derechos de acceso, rectificación, supresión, o limitación del tratamiento,
+                        ,dirigiéndose a INVENTIA PLUS S.L. en la siguiente dirección:
+                        C/ Delineante, 22, 2º planta, Ofic. 8 35219,Pol. Ind. Salinetas Telde, Las Palmas. Igualmente,
+                        puede presentar una reclamación ante la Agencia Española de Protección de datos si considera que sus
+                        derechos han sido vulnerados. Puede solicitar/consultar información ampliada sobre protección de datos
+                        en info@inventiaplis.com
+
+                    </p>
                 </div>
                 <div class="oe_structure"/>
             </div>
