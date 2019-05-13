@@ -32,6 +32,7 @@
         'views/templates.xml',
         'reports/service_report.xml',
         'reports/service_report_template.xml',
+        
     ],
     # only loaded in demonstration mode
     'demo': [
