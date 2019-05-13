@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+
+    <template id="report_layout" name="Report layout">
+        &lt;!DOCTYPE html&gt;
+        <html t-att-lang="lang and lang.replace('_', '-')" t-att-data-editable="'1' if editable else None" t-att-data-translatable="'1' if translatable else None" t-att-data-edit_translations="'1' if edit_translations else None" t-att-data-main-object="repr(main_object) if editable else None" t-att-data-report-margin-top="data_report_margin_top" t-att-data-report-header-spacing="data_report_header_spacing" t-att-data-report-dpi="data_report_dpi" t-att-web-base-url="web_base_url">
+            <head>
+                <meta charset="utf-8" />
+                <meta name="viewport" content="initial-scale=1"/>
+                <title>
+                    <t t-esc="title or 'Odoo Report'"/>
+                </title>
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.report_assets_common" t-js="false"/>
+                <t t-if="editable">
+                    <t t-call-assets="web_editor.summernote" t-js="false"/>
+                    <t t-call-assets="web_editor.assets_editor" t-js="false"/>
+                    <t t-call-assets="web.report_assets_editor" t-js="false"/>
+                </t>
+                <t t-if="editable">
+                    <t t-call="web.less_helpers"/>
+
+                    <link href="/web/static/src/less/import_bootstrap.less" rel="stylesheet" type="text/less"/>
+                    <link href="/base/static/src/css/description.css" rel="stylesheet" type="text/css"/>
+
+                    <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/>
+
+                    <!-- FIXME remove website / portal dependency ..? -->
+                    <link href="/portal/static/src/less/website.wrapwrap.less" rel="stylesheet" type="text/less"/>
+                    <link href="/website/static/src/less/website.snippets.less" rel="stylesheet" type="text/less"/>
+
+                    <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+
+                    <link href="/web/static/src/less/report.less" rel="stylesheet" type="text/less"/>
+                    <link href="/web/static/src/less/layout_background.less" rel="stylesheet" type="text/less"/>
+                    <link href="/web/static/src/less/layout_boxed.less" rel="stylesheet" type="text/less"/>
+                    <link href="/web/static/src/less/layout_clean.less" rel="stylesheet" type="text/less"/>
+
+                    <t t-call-assets="web_editor.summernote" t-css="false"/>
+                    <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+                    <t t-call-assets="web.report_assets_editor" t-css="false"/>
+
+                    <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+                    <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
+                    <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
+                    <script type="text/javascript" src="/web_editor/static/src/js/iframe.js"></script>
+                    <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
+                </t>
+            </head>
+            <body class="container">
+                <div id="wrapwrap">
+                    <main>
+                        <t t-if="o and 'company_id' in o">
+                            <t t-set="company" t-value="o.company_id"/>
+                        </t>
+                        <t t-if="not o or not 'company_id' in o">
+                            <t t-set="company" t-value="res_company"/>
+                        </t>
+                        
+                        <div class="article" style="border:5px solid red;border-height:1000px;">
+                        <!-- header -->
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
+                                    </div>
+                                    <div class="col-xs-6 col-xs-offset-6 text-center">
+                                        <span t-esc="company.name"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- content -->
+                            <div class="row container">
+                                <t style="border: 25px solid #73cc00;" t-name="sale.report_saleorder_document"/>
+                            </div>
+
+                            <!-- footer -->
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <h1 style="color:#3d4d5a;"> 
+                                            Gracias 
+                                        <em style="color:#73cc00">^__^</em>
+                                    </h1>
+                                </div>
+                                <div class="col-xs-2 col-xs-offset-2 text-center">
+                                    <h4 class="prueba" style="text-align: left end;"> Inventia Plus S.L.</h4>
+                                    <p class="prueba">B35767417</p>
+                                </div>
+                                <div class="col-xs-2 col-xs-offset-3 text-right">
+                                    <p style="line-height: 95%; text-align: left;">
+                                        <h4 style="margin-left: 1%; margin-right: 3% ">contacto</h4>
+                                        info@inventiaplus.com                    <br/>
+                                        +34 928 702 054 <br/>
+                                        C/ Delineante, 22, 2º planta, Ofic. 8 <br/>
+                                        35219,
+                                        Pol. Ind. Salinetas Telde
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    
+
+    <template id="Gestion_de_Dominios_Alojamientos.report_template">
+
+        <t t-set="body_classname" t-value="''"/>
+        <t t-call="Gestion_de_Dominios_Alojamientos.report_layout"></t>
+        
+    </template>
+
+</odoo>

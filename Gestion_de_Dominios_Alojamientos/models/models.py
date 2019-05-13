@@ -36,6 +36,7 @@ class stateListener(models.Model):
                 #el número de meses que están estipulados.
                 line.date_to_end = datetime.now() + relativedelta(months=line.product_id.dead_line_service.months)
                 _logger.warning("----------------------------" + str(line.date_to_end))
+                line.only_date = datetime.strptime(line.date_to_end, '%Y-%m-%d')-datetime.now()
                 pass
             pass
 
@@ -46,6 +47,7 @@ class serviceInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     date_to_end = fields.Date(string='Date To Die',store=True)
+    only_date = fields.Date(string='Date',store=True)
     days_to_end = fields.Integer(string='Days To Die', compute="_getDaysToDie", store=False)
     
 
@@ -125,7 +127,10 @@ class revisando_factura_clientes(models.Model):
     #                             'order_id': sale_id.id}
     #             sale_line_id = sale_line_pool.create(sale_line)
     #     send_sale_order = sale_id.force_quotation_send()
-    #     return {"name": sale_id.name, "id": sale_id.id } 
+    #     return {"name": sale_id.name, "id": sale_id.id }
+
+    
+    # Método a usar futuro
     @api.model
     def create_sales_order(self, linesOrder, customer_id):
         sale_pool = self.env['sale.order']
