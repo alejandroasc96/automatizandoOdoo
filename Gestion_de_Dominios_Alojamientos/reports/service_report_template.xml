@@ -240,7 +240,7 @@
                                             t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                     </td>
                                 </tr>
-                                <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
+                                <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group" style="border-bottom:2px solid black;">
                                     <tr style="border-bottom:1px solid #dddddd;">
                                         <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
                                             <td>
@@ -263,7 +263,7 @@
                                         </t>
                                     </tr>
                                 </t>
-                                <tr class="border-black" style="color:black;border-bottom:2px solid black">
+                                <tr class="border-black" style="color:black;">
                                     <td style="color:black" ><strong>Total</strong></td>
                                     <td class="text-right">
                                         <span style="color:black" t-field="doc.amount_total"
@@ -271,10 +271,12 @@
                                     </td>
                                 </tr>
                             </table>
+                            
                         </div>
                     </div>
                 </div>
-                <div class="row" style="margin-top=5px">
+                <div class="row" style="width:800px;border-bottom:3px solid black;"></div>
+                <div class="row" style="margin-top:45%;">
                     <div class="col-xs-6">
                         <p>
                             <strong>Términos y condiciones:</strong> <br/>
@@ -285,7 +287,7 @@
                     <div class="col-xs-6" style="border-left: 2px solid #73cc00;">
                         <p>
                             <strong>Firma y sello:</strong> <br/><br/>
-                            <strong>Nombre:</strong>______________________                        
+                            <strong>Nombre: </strong>______________________                        
                         </p>
                     </div>
                 </div>
