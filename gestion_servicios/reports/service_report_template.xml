@@ -177,11 +177,15 @@
                         <div t-field="doc.partner_id.parent_id.phone" />
                     </div>
                 </div>
-
+                <style>
+                tr:nth-child(odd) {
+                background-color: #f5f6f6;
+                }
+                </style>
                 <t t-foreach="doc.order_lines_layouted()" t-as="page" style="">
-                    <table class="table table-condensed" style="max-height:70%;border-bottom:2px solid black">
+                    <table class="table table-condensed pep" style="max-height:70%;border-bottom:2px solid black">
                         <thead>
-                            <tr style="border-bottom:2px solid black;color:black">
+                            <tr style="border-bottom:2px solid black;color:black; background:white;">
                                 <th style="color:black">Concepto</th>
                                 <th style="color:black" class="text-right">Precio/ud.</th>
                                 <th class="text-right">Cantidad</th>
@@ -225,7 +229,7 @@
                                 </t>
 
                                 <t t-if="(layout_category_size > 1 or page_size > 1) and layout_category['subtotal']" groups="sale.group_sale_layout">
-                                    <tr class="text-right" style="border-bottom:2px solid grey">
+                                    <tr class="text-right" style="border-bottom:2px solid grey; background:white;">
                                         <td colspan="6">
                                             <strong>Subtotal: </strong>
                                             <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
@@ -246,8 +250,8 @@
                 <div class="clearfix">
                     <div class="row" name="total">
                         <div class="col-xs-4 pull-right">
-                            <table class="table table-condensed" style="border-top:0px;min-width: 200px;max-width: 350px;">
-                                <tr class="border-black" style="border-bottom:1px solid #dddddd;">
+                            <table class="table table-condensed" style="border: hidden">
+                                <tr style="border: none; background:white;">
                                     <td><strong>Subtotal</strong></td>
                                     <td class="text-right">
                                         <span t-field="doc.amount_untaxed"
@@ -255,12 +259,12 @@
                                     </td>
                                 </tr>
                                 <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group" style="border-bottom:2px solid black;">
-                                    <tr style="border-bottom:1px solid #dddddd;">
+                                    <tr style="border-bottom:1px solid #dddddd;  background:white;">
                                         <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
                                             <td>
-                                            a
+                                            
                                                 <span t-esc="amount_by_group[0]"/>
-                                             </td>
+                                            </td>
                                             <td class="text-right">
                                                 <span t-esc="amount_by_group[1]"
                                                     t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
@@ -268,18 +272,18 @@
                                         </t>
                                         <t t-else ="">
                                             <td>
-                                            b
+                                            
                                                 <span t-esc="amount_by_group[0]"/>
                                             </td>
                                             <td class="text-right">
-                                            c
+                                            
                                                 <span t-esc="amount_by_group[1]"
                                                     t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                             </td>
                                         </t>
                                     </tr>
                                 </t>
-                                <tr class="border-black" style="color:black;">
+                                <tr class="border-black" style="color:black; background:white;">
                                     <td style="color:black" ><strong>Total</strong></td>
                                     <td class="text-right">
                                         <span style="color:black" t-field="doc.amount_total"
