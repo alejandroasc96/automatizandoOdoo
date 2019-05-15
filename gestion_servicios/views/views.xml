@@ -1,7 +1,6 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-    
     <record id="InventiaPlusPaper" model="report.paperformat">
       <field name="name">InventiaPlusPaper</field>
       <field name="default" eval="True" />
@@ -18,8 +17,8 @@
       <field name="dpi">90</field>
     </record>
 
-    <record model="ir.ui.view" id="Gestion_de_Dominios_Alojamientos.form">
-      <field name="name">Gestion_de_Dominios_Alojamientos_form</field>
+    <record model="ir.ui.view" id="gestion_servicios.form">
+      <field name="name">gestion_servicios_form</field>
       <field name="model">product.template</field>
       <field name="inherit_id" ref="product.product_template_form_view"/>
       <field name="arch" type="xml">
@@ -29,8 +28,8 @@
       </field>
     </record>
 
-    <record model="ir.ui.view" id="Gestion_de_Dominios_Alojamientos.list">
-      <field name="name">Gestion_de_Dominios_Alojamientos_list</field>
+    <record model="ir.ui.view" id="gestion_servicios.list">
+      <field name="name">gestion_servicios_list</field>
       <field name="model">account.invoice.line</field>
       <field name="arch" type="xml">
         <tree>
@@ -45,8 +44,8 @@
     </record>
 
     <!-- vista calendario -->
-    <record model="ir.ui.view" id="Gestion_de_Dominios_Alojamientos.calendar">
-      <field name="name">Gestion_de_Dominios_Alojamientos_calendar</field>
+    <record model="ir.ui.view" id="gestion_servicios.calendar">
+      <field name="name">gestion_servicios_calendar</field>
       <field name="model">account.invoice.line</field>
       <field name="arch" type="xml">
         <calendar string="date_to_end" date_start="date_to_end">
@@ -56,8 +55,6 @@
         </calendar>
       </field>
     </record>
-
-    
 
     <record id="deadLine_service_form" model = "ir.ui.view">
       <field name="name">service_line</field>
@@ -72,17 +69,7 @@
       </field>
     </record>
 
-
-    <!-- actions opening views on models -->
-
-    <record model="ir.actions.act_window" id="Gestion_de_Dominios_Alojamientos.action_window">
-      <field name="name">Gestion_de_Dominios_Alojamientos</field> 
-      <field name="res_model">account.invoice.line</field> 
-      <field name="view_id" ref="Gestion_de_Dominios_Alojamientos.list"/>
-      <field name="view_mode">tree,calendar</field>
-    </record>
-
-<!-- Views of schedule action -->
+    <!-- Views of schedule action -->
     <record forcecreate="True" id="revisando_factura_clientes_v1" model="ir.cron">
       <field name="name">Revision de Suscripciones Vencidas</field>
       <field eval="True" name="active" />
@@ -116,18 +103,26 @@
 
     </record>
 
-  <!-- View of Channel Denied order -->
+    <!-- View of Channel Denied order -->
   <record model="mail.channel" id="channel_sb_1">
       <field name="name">Denied Orders</field>
       <field name="public">public</field>
       <field name="description">Medical refill information details.</field>
+  </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="gestion_servicios.action_window">
+      <field name="name">gestion_servicios</field> 
+      <field name="res_model">account.invoice.line</field> 
+      <field name="view_id" ref="gestion_servicios.list"/>
+      <field name="view_mode">tree,calendar</field>
     </record>
 
     <!-- server action to the one above -->
     <!--
-    <record model="ir.actions.server" id="Gestion_de_Dominios_Alojamientos.action_server">
-      <field name="name">Gestion_de_Dominios_Alojamientos server</field>
-      <field name="model_id" ref="model_Gestion_de_Dominios_Alojamientos_Gestion_de_Dominios_Alojamientos"/>
+    <record model="ir.actions.server" id="gestion_servicios.action_server">
+      <field name="name">gestion_servicios server</field>
+      <field name="model_id" ref="model_gestion_servicios_gestion_servicios"/>
       <field name="state">code</field>
       <field name="code">
         action = {
@@ -140,15 +135,20 @@
     -->
 
     <!-- Top menu item -->
-
-    <menuitem name="Gestion de Dominions/Alojamientos" id="Gestion_de_Dominios_Alojamientos.menu_root"/>
-
+    
+    <menuitem name="gestion_servicios" id="gestion_servicios.menu_root"/>
+  
     <!-- menu categories -->
-
-    <menuitem name="Servicios" id="Gestion_de_Dominios_Alojamientos.menu_1" parent="Gestion_de_Dominios_Alojamientos.menu_root" action="Gestion_de_Dominios_Alojamientos.action_window"/>
-    <!-- <menuitem name="Emails" id="Gestion_de_Dominios_Alojamientos.menu_2" parent="Gestion_de_Dominios_Alojamientos.menu_root" action="Gestion_de_Dominios_Alojamientos.action_window"/> -->
-
-    <!-- <menuitem name="Server to list" id="Gestion_de_Dominios_Alojamientos" parent="Gestion_de_Dominios_Alojamientos.menu_2" action="Gestion_de_Dominios_Alojamientos.action_server"/> -->
-
+    
+    <menuitem name="Servicios" id="gestion_servicios.menu_1" parent="gestion_servicios.menu_root" action="gestion_servicios.action_window"/>
+    <!-- <menuitem name="Menu 2" id="gestion_servicios.menu_2" parent="gestion_servicios.menu_root"/> -->
+  
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="gestion_servicios.menu_1_list" parent="gestion_servicios.menu_1"
+              action="gestion_servicios.action_window"/>
+    <menuitem name="Server to list" id="gestion_servicios" parent="gestion_servicios.menu_2"
+              action="gestion_servicios.action_server"/>
+    -->
   </data>
 </odoo>

@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Gestión de Dominios/Alojamientos",
+    'name': "Gestión de Servicios Contratados",
 
     'summary': """
-        Herramienta para la gestión de los dominios / alojamientos 
+        Herramienta para la gestión de los servicios 
         (y productos relacionados) de los clientes.
         """,
 
-    'description': """        
-            - Genera automáticamente el presupuesto en una fecha previa al vencimiento del producto.
-            - Envía por email el presupuesto.
-            - Generación de la correspondiente factura cuando corresponda en caso de aprobación del presupuesto.
+    'description': """
+        - Genera automáticamente el presupuesto en una fecha previa al vencimiento del producto.
+        - Envía por email el presupuesto.
+        - Generación de la correspondiente factura cuando corresponda en caso de aprobación del presupuesto.
     """,
 
     'author': "Alejandro and Bryan",

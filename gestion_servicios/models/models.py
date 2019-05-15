@@ -10,6 +10,22 @@ import logging
 _logger = logging.getLogger(__name__)
 # _logger.warning("----------------------------" + str(r.invoice_id))
 
+class dateOrderFormat(models.Model):
+    _name = 'sale.order'
+    _inherit = 'sale.order'
+
+    date_order_format = fields.Date( string='Fecha formateada', compute="_getDateOrder", store=False)
+
+    @api.model
+    def _getDateOrder(self):
+        saleOrder = self.search([])
+        for line in saleOrder:
+            x = line.date_order
+            b = x[:10]
+            line.date_order_format = b 
+
+
+
 class DeadLineTime(models.Model):
     _name = 'deadline'
     _rec_name = 'months'
@@ -24,7 +40,7 @@ class stateListener(models.Model):
     @api.model
     @api.multi
     def invoice_validate(self):
-
+        
         for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
             invoice.message_subscribe([invoice.partner_id.id])
         self._check_duplicate_supplier_reference()
@@ -35,8 +51,8 @@ class stateListener(models.Model):
                 #Para calcular la fecha en la que caduca el servicio usamos el método relativedelta que nos va añadiendo
                 #el número de meses que están estipulados.
                 line.date_to_end = datetime.now() + relativedelta(months=line.product_id.dead_line_service.months)
-                _logger.warning("----------------------------" + str(line.date_to_end))
-                # line.only_date = datetime.strptime(line.date_to_end, '%Y-%m-%d')-datetime.now()
+                # line.only_date = datetime.strptime(line.date_to_end, '%Y-%m-%d')
+                # _logger.warning("----------------------------" + str(line.only_date))
                 pass
             pass
 

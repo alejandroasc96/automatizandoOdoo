@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <report id="service_report" name="Gestion_de_Dominios_Alojamientos.report_template" model="sale.order" string="Service Report" report_type="qweb-pdf" paperformat="InventiaPlusPaper" />
-</odoo>
