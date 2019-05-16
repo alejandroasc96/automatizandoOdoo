@@ -37,6 +37,6 @@
     'demo': [
         'demo/demo.xml',
     ],
-    # 'images': ['images/inventia_fondo_blanco.png'],
+    'images': ['/static/src/img/icon.png'],
     'application': 'True',
 }
