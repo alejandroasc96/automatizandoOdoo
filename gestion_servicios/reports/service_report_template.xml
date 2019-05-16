@@ -60,14 +60,15 @@
     </template>
 <!-- style="margin-bottom:50px;margin-left:-15px;margin-right:-15px;" -->
     <template id="inventia_layout">
-        <div class="header" style="margin-left:27px;margin-right:-45px;">
+        <div class="header" >
             <style>
                 @import url('https://fonts.googleapis.com/css?family=Lato');
             </style>
-            <div class="row" style="border-top:10px solid green">
+            <div class="row" style="border-top:30px solid #72cc00">
                 <div class="col-xs-6">
+                    
                     <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" 
-                    style="margin-top:0px;max-width: 550px; max-height: 250px;"/>
+                    style="margin-top:0px;max-width: 550px; max-height: 250px;margin-left:50px"/>
                 </div>
                 <div class="col-xs-5 text-right" style="margin-top:85px; margin-right:15px">
                     <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
@@ -81,7 +82,6 @@
                     </h3>
                     <p style="align-self: left;font-size:20px;font-family: 'Lato'" t-field="doc.date_order_format"></p>
                 </div>  
-                 
             </div>
         </div>
         <div class="article" >
@@ -158,7 +158,7 @@
                         <div t-field="doc.partner_id.name" />
                         <div t-field="doc.partner_id.parent_id.vat" />
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-xs-4" style="margin-top:20px;">
                         <div t-field="doc.partner_id.parent_id.street" />
                         <!-- <div class="row">
                             <div class="col-xs-4"  t-field="doc.partner_id.parent_id.state_id">//</div >
@@ -172,7 +172,7 @@
                         </div>
                         <div t-field="doc.partner_id.parent_id.country_id" />
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-xs-4" style="margin-top:20px;">
                         <div t-field="doc.partner_id.parent_id.email" />
                         <div t-field="doc.partner_id.parent_id.phone" />
                     </div>
@@ -190,7 +190,7 @@
                                 <th style="color:black" class="text-right">Precio/ud.</th>
                                 <th class="text-right">Cantidad</th>
                                 <th style="color:black" t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
-                                <th style="color:black" class="text-right" groups="sale.group_show_price_subtotal">Amount</th>
+                                <th style="color:black" class="text-right" groups="sale.group_show_price_subtotal">Total</th>
                                 <th style="color:black" class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
                             </tr>
                     </thead>
@@ -262,8 +262,8 @@
                                     <tr style="border-bottom:1px solid #dddddd;  background:white;">
                                         <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
                                             <td>
-                                            
-                                                <span t-esc="amount_by_group[0]"/>
+                                                <strong>I.G.I.C.(6,5%)</strong>
+                                                <!-- <span t-esc="amount_by_group[0]"/> -->
                                             </td>
                                             <td class="text-right">
                                                 <span t-esc="amount_by_group[1]"
@@ -272,7 +272,7 @@
                                         </t>
                                         <t t-else ="">
                                             <td>
-                                            
+                                                <span>IGIC</span>
                                                 <span t-esc="amount_by_group[0]"/>
                                             </td>
                                             <td class="text-right">
@@ -297,31 +297,31 @@
                     
                 </div>
                 <!-- 55 -->
-                <div class="row" style="margin-top:20%;">
-                    <div class="col-xs-6">
-                        <p>
-                            <strong>Términos y condiciones:</strong> <br/>
-                            Este presupusto tiene una validez de 3 meses. <br/>
-                            Una vez aceptado, devolverlo firmado y sellado.
-                        </p>
+                <div class="row" style="margin-top:35%;">
+                    <div class="col-xs-6" style="margin-bottom: auto;">
+                        
+                        <h4><strong>Términos y condiciones:</strong></h4>
+                        <div style="line-height: 105%;">Este presupusto tiene una validez de 3 meses.<br/>
+                        Una vez aceptado, devolverlo firmado y sellado.</div>
+                        
                     </div>
-                    <div class="col-xs-6" style="border-left: 2px solid #72cc00;">
-                        <p>
-                            <strong>Firma y sello:</strong> <br/><br/>
-                            <strong>Nombre: </strong>_________________________________________                        
-                        </p>
+                    <div class="col-xs-6" style="border-left: 2px solid #72cc00; margin-bottom: auto;">
+                        
+                        <h4><strong>Firma y sello:</strong></h4>
+                        <span><strong>Nombre: </strong></span><span>_____________________________</span>                        
+                        
                     </div>
                 </div>
                 <div class="row">
-                    <p style="font-size:10px;margin-top:20px;margin-left:15px;margin-right:15px;text-align:justify">
+                    <p style="font-size:9px;margin-top:20px;margin-left:15px;text-align:left;line-height: 105%;color:#3e4d59;">
                         El responsable del tratamiento de sus datos es INVENTIA PLUS S.L..Sus datos serán
                         tratados con la finalidad de gestionar los servicios administrativos y facturar
                         nuestros servicios. La legitimación para el uso de sus datos está basada en la 
                         ejecución de un contrato o presentación de servicios. No se cederán datos a trceros, salvo 
                         obligación legal. Los datos serán destruidos una vez comuníque su baja y/o finalizados los períodos
                         legales de conservación. No se llevarán a cabo transferencias internacionales de datos ni análisis deperfiles.
-                         / Los interesados podrán ejercitar sus derechos de acceso, rectificación, supresión, o limitación del tratamiento,
-                        ,dirigiéndose a INVENTIA PLUS S.L. en la siguiente dirección:
+                        / Los interesados podrán ejercitar sus derechos de acceso, rectificación, supresión, o limitación del tratamiento,
+                        dirigiéndose a INVENTIA PLUS S.L. en la siguiente dirección:
                         C/ Delineante, 22, 2º planta, Ofic. 8 35219,Pol. Ind. Salinetas Telde, Las Palmas. Igualmente,
                         puede presentar una reclamación ante la Agencia Española de Protección de datos si considera que sus
                         derechos han sido vulnerados. Puede solicitar/consultar información ampliada sobre protección de datos
