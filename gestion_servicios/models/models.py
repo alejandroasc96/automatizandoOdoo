@@ -10,6 +10,12 @@ import logging
 _logger = logging.getLogger(__name__)
 # _logger.warning("----------------------------" + str(r.invoice_id))
 
+class addNewFieldResPartner(models.Model):
+    
+    _inherit = 'res.partner'
+
+    department = fields.Char(string='Departamento')
+
 class dateOrderFormat(models.Model):
     _name = 'sale.order'
     _inherit = 'sale.order'

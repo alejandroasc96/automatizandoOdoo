@@ -69,6 +69,19 @@
       </field>
     </record>
 
+    <!-- Vista res.partner_form -->
+    <record id="department_form" model = "ir.ui.view">
+      <field name="name">department_line</field>
+      <field name="model">res.partner</field>
+      <field name = "inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <!-- <xpath expr="//notebook/page/field[@name='child_ids']/form/sheet/group/field[@name='function']" position="after"> -->
+        <xpath expr="//notebook/page/field[@name='child_ids']/form/sheet/group/group/field[@name='function']" position="after">
+          <field name="department"/>
+        </xpath>
+      </field>
+    </record>
+
     <!-- Views of schedule action -->
     <record forcecreate="True" id="revisando_factura_clientes_v1" model="ir.cron">
       <field name="name">Revision de Suscripciones Vencidas</field>
