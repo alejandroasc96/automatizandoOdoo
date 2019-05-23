@@ -1,6 +1,7 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
+    <!-- Formato de hoja PDF del Presupuesto Invetnia Plus -->
     <record id="InventiaPlusPaper" model="report.paperformat">
       <field name="name">InventiaPlusPaper</field>
       <field name="default" eval="True" />
@@ -16,7 +17,8 @@
       <field name="header_spacing">60</field>
       <field name="dpi">90</field>
     </record>
-
+    
+    <!-- Campo duracion servicios en vista formulario producto -->
     <record model="ir.ui.view" id="gestion_servicios.form">
       <field name="name">gestion_servicios_form</field>
       <field name="model">product.template</field>
@@ -28,6 +30,7 @@
       </field>
     </record>
 
+    <!-- Campos caducidad servicio en Vista linea de factura -->
     <record model="ir.ui.view" id="gestion_servicios.list">
       <field name="name">gestion_servicios_list</field>
       <field name="model">account.invoice.line</field>
@@ -43,7 +46,7 @@
       </field>
     </record>
 
-    <!-- vista calendario -->
+    <!-- vista calendario de caducidad de servicio -->
     <record model="ir.ui.view" id="gestion_servicios.calendar">
       <field name="name">gestion_servicios_calendar</field>
       <field name="model">account.invoice.line</field>
@@ -56,6 +59,7 @@
       </field>
     </record>
 
+    <!-- Vista del modulo Gestion_servicios -->
     <record id="deadLine_service_form" model = "ir.ui.view">
       <field name="name">service_line</field>
       <field name="model">account.invoice</field>
@@ -69,13 +73,12 @@
       </field>
     </record>
 
-    <!-- Vista res.partner_form -->
+    <!-- Vista res.partner_form  campo departamento para res.partner usado en PDF-->
     <record id="department_form" model = "ir.ui.view">
       <field name="name">department_line</field>
       <field name="model">res.partner</field>
       <field name = "inherit_id" ref="base.view_partner_form"/>
       <field name="arch" type="xml">
-        <!-- <xpath expr="//notebook/page/field[@name='child_ids']/form/sheet/group/field[@name='function']" position="after"> -->
         <xpath expr="//notebook/page/field[@name='child_ids']/form/sheet/group/group/field[@name='function']" position="after">
           <field name="department"/>
         </xpath>
@@ -99,7 +102,7 @@
 
     </record>
 
-
+    <!-- Views of schedule action -->
     <record forcecreate="True" id="review_quotation_v1" model="ir.cron">
       <field name="name">Revision de Presupuestos enviados</field>
       <field eval="True" name="active" />
@@ -116,36 +119,20 @@
 
     </record>
 
-    <!-- View of Channel Denied order -->
+    <!-- View of Channel Denied order Canal para notificar los presupuestos -->
   <record model="mail.channel" id="channel_sb_1">
       <field name="name">Denied Orders</field>
       <field name="public">public</field>
       <field name="description">Medical refill information details.</field>
   </record>
 
-    <!-- actions opening views on models -->
+    <!-- actions opening views on module gestion_servicios -->
     <record model="ir.actions.act_window" id="gestion_servicios.action_window">
       <field name="name">gestion_servicios</field> 
       <field name="res_model">account.invoice.line</field> 
       <field name="view_id" ref="gestion_servicios.list"/>
       <field name="view_mode">tree,calendar</field>
     </record>
-
-    <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="gestion_servicios.action_server">
-      <field name="name">gestion_servicios server</field>
-      <field name="model_id" ref="model_gestion_servicios_gestion_servicios"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
-      </field>
-    </record>
-    -->
 
     <!-- Top menu item -->
     

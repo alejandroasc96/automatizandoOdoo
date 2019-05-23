@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- creacion del reporte del PDF Presupuesto InventiaPlus con la template service_report_template.xml -->
 <odoo>
     <report id="service_report" name="gestion_servicios.report_template" model="sale.order" string="Service Report" report_type="qweb-pdf" paperformat="InventiaPlusPaper" />
 </odoo>

@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+    <!-- Este es el report template que usa el report que genera el PDF -->
+    <template id="gestion_servicios.report_template">
+        <t t-name="sale.report_saleorder">
+            <t t-call="gestion_servicios.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="gestion_servicios.report_saleorder_document" t-lang="doc.partner_id.lang"/>
+                </t>
+            </t>
+        </t>
+    </template>
+    <!-- html_container personalizado que usa report_layout personalizado -->
     <template id="html_container">
         <t t-set="body_classname" t-value="'container'"/>
         <t t-call="gestion_servicios.report_layout">
             <t t-raw="0"/>
         </t>
     </template>
-    
+    <!-- Creador de la estructura del html -->
     <template id="report_layout" name="Report layout">&lt;!DOCTYPE html&gt;
         <html t-att-lang="lang and lang.replace('_', '-')" t-att-data-editable="'1' if editable else None" t-att-data-translatable="'1' if translatable else None" t-att-data-edit_translations="'1' if edit_translations else None" t-att-data-main-object="repr(main_object) if editable else None" t-att-data-report-margin-top="data_report_margin_top" t-att-data-report-header-spacing="data_report_header_spacing" t-att-data-report-dpi="data_report_dpi" t-att-web-base-url="web_base_url">
             <head>
@@ -40,6 +50,7 @@
             <body class="container">
                 <div id="wrapwrap">
                     <main>
+                    <!-- contenido personalizado del PDF -->
                         <div>
                             <t t-raw="0"/>
                         </div>
@@ -49,16 +60,7 @@
         </html>
     </template>
 
-    <template id="gestion_servicios.report_template">
-       <t t-name="sale.report_saleorder">
-            <t t-call="gestion_servicios.html_container">
-                <t t-foreach="docs" t-as="doc">
-                    <t t-call="gestion_servicios.report_saleorder_document" t-lang="doc.partner_id.lang"/>
-                </t>
-            </t>
-        </t>
-    </template>
-<!-- style="margin-bottom:50px;margin-left:-15px;margin-right:-15px;" -->
+    <!-- Definiendo el header y el footer -->
     <template id="inventia_layout">
         <div class="header" >
             <style>
@@ -66,10 +68,6 @@
             </style>
             <div class="row" style="border-top:30px solid #72cc00">
                 <div class="col-xs-6">
-                    
-                    <!-- <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" 
-                    style="margin-top:0px;max-width: 250px; max-height: 250px;margin-left:50px"/> -->
-                    <!-- <img t-att-src="'data:image/png;base64,%s' % to_text(product_id.image_medium)"/> -->
                     <img src="/gestion_servicios/static/src/img/icon.png" style="margin-top:10%;max-width: 250px; max-height: 250px;margin-left:50px"/>
                 </div>
                 <div class="col-xs-5 text-right" style="margin-top:3%; margin-right:15px">
@@ -86,11 +84,11 @@
                 </div>  
             </div>
         </div>
+        <!-- El contenido del article definido mas a bajo -->
         <div class="article" >
                 <t t-raw="0" />
         </div>
 
-<!-- style="margin-left:-15px;margin-right:-15px;" -->
         <div class="footer" >
             <style>
                 @import url('https://fonts.googleapis.com/css?family=Lato');
@@ -125,7 +123,8 @@
 
         
     </template>
-
+    
+    <!-- Template para usar el header y footer personalizado -->
     <template id="external_layout">
         <!-- Multicompany -->
         <t t-if="not o and doc">
@@ -139,11 +138,13 @@
             <t t-set="company" t-value="res_company"/>
         </t>
         <t t-call="gestion_servicios.inventia_layout">
+        <!-- Relacion entre el contenido del article y su layaout -->
             <t t-raw="0"/>
         </t>
         
     </template>
 
+    <!-- Contenido del article -->
     <template id="report_saleorder_document">
         <t t-call="gestion_servicios.external_layout">
             <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
@@ -163,11 +164,6 @@
                     </div>
                     <div class="col-xs-4" style="margin-top:20px;">
                         <div t-field="doc.partner_id.parent_id.street" />
-                        <!-- <div class="row">
-                            <div class="col-xs-4"  t-field="doc.partner_id.parent_id.state_id">//</div >
-                            <div class="col-xs-1">/</div>                            
-                            <div class="col-xs-4" t-field="doc.partner_id.parent_id.zip"></div > 
-                        </div> -->
                         <div>
                             <span t-field="doc.partner_id.parent_id.zip"></span >
                             <span> / </span>
@@ -253,7 +249,7 @@
                 <div class="clearfix">
                     <div class="row" name="total">
                         <div class="col-xs-4 pull-right">
-                            <table class="table table-condensed" style="border: hidden;margin-top: -7%">
+                            <table class="table table-condensed" style="border: hidden;margin-top: -8%">
                                 <tr style="border: none; background:white;">
                                     <td><strong>Subtotal</strong></td>
                                     <td class="text-right">
