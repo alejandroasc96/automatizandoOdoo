@@ -174,7 +174,7 @@ class review_quotation(models.Model):
         for quo in quotation:
             date = (datetime.now() - datetime.strptime(quo.date_order, '%Y-%m-%d %H:%M:%S')).days
             # hay que comprobar que no haya sido notificado ya
-            if date =15 and quo.state == 'sent':
+            if date ==15 and quo.state == 'sent':
                 
                 self._postDeniedOrder({"quotation_id" : quo.id, "partner_id": quo.partner_id.name})
 
